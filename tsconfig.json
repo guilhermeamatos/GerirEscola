@@ -1,0 +1,18 @@
+{
+ "compilerOptions": {
+   "target": "ES6", // ou "ES2015"
+   "module": "commonjs",
+   "strict": true,
+   "esModuleInterop": true,
+   "skipLibCheck": true,
+   "outDir": "./dist"
+ },
+ "include": [
+   "./**/*.ts"
+ ],
+ "exclude": [
+   "dist",
+   "node_modules",
+   "**/*.spec.ts"
+ ]
+}
