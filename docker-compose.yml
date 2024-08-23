@@ -1,0 +1,50 @@
+version: '3'
+
+services:
+  db:
+    image: postgres
+    container_name: databaseaulaPrisma
+    restart: always
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: pgGuilherme
+      POSTGRES_USER: postgres
+      POSTGRES_DB: mydatabase
+    ports:
+      - "5432:5432"
+    logging:
+      driver: json-file
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+
+  app:
+    build: .  # Utiliza o Dockerfile da raiz do projeto para construir a imagem Node.js
+    container_name: nodeapp
+    working_dir: /usr/src/app
+    volumes:
+      - .:/usr/src/app
+    command: npm start # Comando para rodar o projeto Node.js
+    ports:
+      - "3000:3000" # Porta da aplicação Node.js
+    depends_on:
+      - db
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: pgGuilherme
+      DB_NAME: mydatabase
+
+volumes:
+  pgdata:
