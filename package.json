@@ -14,7 +14,8 @@
   "license": "ISC",
   "dependencies": {
     "@prisma/client": "^5.18.0",
-    "express": "^4.19.2"
+    "express": "^4.19.2",
+    "prisma": "^5.18.0"
   },
   "devDependencies": {
     "@types/express": "^4.17.21",

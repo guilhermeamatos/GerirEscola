@@ -1,21 +1,21 @@
-// src/controllers/SchoolController.ts
+// src/controllers/CoordinatorController.ts
 
 import { Request, Response } from 'express';
-import { SchoolService } from '../services/SchoolService';
-import { CreateSchoolDTO } from '../dto';
+import { CoordinatorService } from '../services/CoordinatorService';
+import { CreateCoordinatorDTO } from '../dto';
 
-export class SchoolController {
-  private schoolService: SchoolService;
+export class CoordinatorController {
+  private coordinatorService: CoordinatorService;
 
-  constructor(schoolService: SchoolService) {
-    this.schoolService = schoolService;
+  constructor(coordinatorService: CoordinatorService) {
+    this.coordinatorService = coordinatorService;
   }
 
   async create(req: Request, res: Response): Promise<Response> {
     try {
-      const schoolData: CreateSchoolDTO = req.body;
-      const newSchool = await this.schoolService.createSchool(schoolData);
-      return res.status(201).json(newSchool);
+      const coordinatorData: CreateCoordinatorDTO = req.body;
+      const newCoordinator = await this.coordinatorService.createCoordinator(coordinatorData);
+      return res.status(201).json(newCoordinator);
     } catch (error) {
       if (error instanceof Error) {
         return res.status(500).json({ error: error.message });
@@ -27,11 +27,11 @@ export class SchoolController {
   async getById(req: Request, res: Response): Promise<Response> {
     try {
       const { id } = req.params;
-      const school = await this.schoolService.getSchoolById(id);
-      if (!school) {
-        return res.status(404).json({ message: 'School not found' });
+      const coordinator = await this.coordinatorService.getCoordinatorById(id);
+      if (!coordinator) {
+        return res.status(404).json({ message: 'Coordinator not found' });
       }
-      return res.status(200).json(school);
+      return res.status(200).json(coordinator);
     } catch (error) {
       if (error instanceof Error) {
         return res.status(500).json({ error: error.message });
@@ -42,8 +42,8 @@ export class SchoolController {
 
   async getAll(req: Request, res: Response): Promise<Response> {
     try {
-      const schools = await this.schoolService.getAllSchools();
-      return res.status(200).json(schools);
+      const coordinators = await this.coordinatorService.getAllCoordinators();
+      return res.status(200).json(coordinators);
     } catch (error) {
       if (error instanceof Error) {
         return res.status(500).json({ error: error.message });
@@ -55,9 +55,9 @@ export class SchoolController {
   async update(req: Request, res: Response): Promise<Response> {
     try {
       const { id } = req.params;
-      const schoolData: Partial<CreateSchoolDTO> = req.body;
-      const updatedSchool = await this.schoolService.updateSchool(id, schoolData);
-      return res.status(200).json(updatedSchool);
+      const coordinatorData: Partial<CreateCoordinatorDTO> = req.body;
+      const updatedCoordinator = await this.coordinatorService.updateCoordinator(id, coordinatorData);
+      return res.status(200).json(updatedCoordinator);
     } catch (error) {
       if (error instanceof Error) {
         return res.status(500).json({ error: error.message });
@@ -69,7 +69,7 @@ export class SchoolController {
   async delete(req: Request, res: Response): Promise<Response> {
     try {
       const { id } = req.params;
-      await this.schoolService.deleteSchool(id);
+      await this.coordinatorService.deleteCoordinator(id);
       return res.status(204).send();
     } catch (error) {
       if (error instanceof Error) {

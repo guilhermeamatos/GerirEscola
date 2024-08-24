@@ -14,11 +14,69 @@ datasource db {
 }
 
 model School {
-  id         Int    @id @default(autoincrement())
-  name       String
-  level      String
-  adminId    Int
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id          String       @id @default(uuid())
+  name        String
+  address     String
+  phone       String
+  email       String
+  founded_at  DateTime
+  classes     Class[]
+  coordinators Coordinator[]
+  manager     Manager?
 }
 
+model Class {
+  id          String       @id @default(uuid())
+  name        String
+  school_year String
+  school_id   String
+  school      School      @relation(fields: [school_id], references: [id])
+  teacher     Teacher?     @relation(fields: [teacher_id], references: [id])
+  teacher_id  String?
+  students    Student[]
+}
+
+model Teacher {
+  id            String      @id @default(uuid())
+  name          String
+  cpf           String      @unique
+  address       String
+  phone         String
+  email         String
+  specialization String
+  classes       Class[]
+}
+
+model Student {
+  id             String      @id @default(uuid())
+  name           String
+  birthdate      DateTime
+  cpf            String      @unique
+  address        String
+  phone          String
+  email          String
+  class_id       String?
+  class          Class?       @relation(fields: [class_id], references: [id])
+}
+
+model Coordinator {
+  id         String      @id @default(uuid())
+  name       String
+  cpf        String      @unique
+  address    String
+  phone      String
+  email      String
+  school_id  String
+  school     School      @relation(fields: [school_id], references: [id])
+}
+
+model Manager {
+  id         String      @id @default(uuid())
+  name       String
+  cpf        String      @unique
+  address    String
+  phone      String
+  email      String
+  school_id  String      @unique
+  school     School      @relation(fields: [school_id], references: [id])
+}

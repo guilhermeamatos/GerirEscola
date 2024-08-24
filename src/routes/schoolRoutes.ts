@@ -1,10 +1,19 @@
+// src/routes/schoolRoutes.ts
 
 import { Router } from 'express';
-import { createSchoolController } from '../controllers/schoolController';
+import { SchoolController } from '../controllers/SchoolController';
+import { SchoolService } from '../services/SchoolService';
+import { SchoolRepository } from '../repositories/SchoolRepository';
 
-const router = Router();
+const schoolRoutes = Router();
+const schoolRepository = new SchoolRepository();
+const schoolService = new SchoolService(schoolRepository);
+const schoolController = new SchoolController(schoolService);
 
-router.post('/schools', createSchoolController);
+schoolRoutes.post('/', (req, res) => schoolController.create(req, res));
+schoolRoutes.get('/:id', (req, res) => schoolController.getById(req, res));
+schoolRoutes.get('/', (req, res) => schoolController.getAll(req, res));
+schoolRoutes.put('/:id', (req, res) => schoolController.update(req, res));
+schoolRoutes.delete('/:id', (req, res) => schoolController.delete(req, res));
 
-export default router;
-
+export { schoolRoutes };

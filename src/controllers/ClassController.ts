@@ -1,21 +1,21 @@
-// src/controllers/SchoolController.ts
+// src/controllers/ClassController.ts
 
 import { Request, Response } from 'express';
-import { SchoolService } from '../services/SchoolService';
-import { CreateSchoolDTO } from '../dto';
+import { ClassService } from '../services/ClassService';
+import { CreateClassDTO } from '../dto';
 
-export class SchoolController {
-  private schoolService: SchoolService;
+export class ClassController {
+  private classService: ClassService;
 
-  constructor(schoolService: SchoolService) {
-    this.schoolService = schoolService;
+  constructor(classService: ClassService) {
+    this.classService = classService;
   }
 
   async create(req: Request, res: Response): Promise<Response> {
     try {
-      const schoolData: CreateSchoolDTO = req.body;
-      const newSchool = await this.schoolService.createSchool(schoolData);
-      return res.status(201).json(newSchool);
+      const classData: CreateClassDTO = req.body;
+      const newClass = await this.classService.createClass(classData);
+      return res.status(201).json(newClass);
     } catch (error) {
       if (error instanceof Error) {
         return res.status(500).json({ error: error.message });
@@ -27,11 +27,11 @@ export class SchoolController {
   async getById(req: Request, res: Response): Promise<Response> {
     try {
       const { id } = req.params;
-      const school = await this.schoolService.getSchoolById(id);
-      if (!school) {
-        return res.status(404).json({ message: 'School not found' });
+      const classData = await this.classService.getClassById(id);
+      if (!classData) {
+        return res.status(404).json({ message: 'Class not found' });
       }
-      return res.status(200).json(school);
+      return res.status(200).json(classData);
     } catch (error) {
       if (error instanceof Error) {
         return res.status(500).json({ error: error.message });
@@ -42,8 +42,8 @@ export class SchoolController {
 
   async getAll(req: Request, res: Response): Promise<Response> {
     try {
-      const schools = await this.schoolService.getAllSchools();
-      return res.status(200).json(schools);
+      const classes = await this.classService.getAllClasses();
+      return res.status(200).json(classes);
     } catch (error) {
       if (error instanceof Error) {
         return res.status(500).json({ error: error.message });
@@ -55,9 +55,9 @@ export class SchoolController {
   async update(req: Request, res: Response): Promise<Response> {
     try {
       const { id } = req.params;
-      const schoolData: Partial<CreateSchoolDTO> = req.body;
-      const updatedSchool = await this.schoolService.updateSchool(id, schoolData);
-      return res.status(200).json(updatedSchool);
+      const classData: Partial<CreateClassDTO> = req.body;
+      const updatedClass = await this.classService.updateClass(id, classData);
+      return res.status(200).json(updatedClass);
     } catch (error) {
       if (error instanceof Error) {
         return res.status(500).json({ error: error.message });
@@ -69,7 +69,7 @@ export class SchoolController {
   async delete(req: Request, res: Response): Promise<Response> {
     try {
       const { id } = req.params;
-      await this.schoolService.deleteSchool(id);
+      await this.classService.deleteClass(id);
       return res.status(204).send();
     } catch (error) {
       if (error instanceof Error) {
