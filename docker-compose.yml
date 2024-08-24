@@ -28,23 +28,5 @@ services:
     depends_on:
       - db
 
-  app:
-    build: .  # Utiliza o Dockerfile da raiz do projeto para construir a imagem Node.js
-    container_name: nodeapp
-    working_dir: /usr/src/app
-    volumes:
-      - .:/usr/src/app
-    command: npm start # Comando para rodar o projeto Node.js
-    ports:
-      - "3000:3000" # Porta da aplicação Node.js
-    depends_on:
-      - db
-    environment:
-      DB_HOST: db
-      DB_PORT: 5432
-      DB_USER: postgres
-      DB_PASSWORD: pgGuilherme
-      DB_NAME: mydatabase
-
 volumes:
   pgdata:
