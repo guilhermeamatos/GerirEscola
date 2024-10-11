@@ -4,6 +4,8 @@ import { Router } from 'express';
 import { ManagerController } from '../controllers/ManagerController';
 import { ManagerService } from '../services/ManagerService';
 import { ManagerRepository } from '../repositories/ManagerRepository';
+import { validate } from '../middlewares/validationMiddleware';
+import { createManagerSchema, updateManagerSchema } from '../validations/managerValidation';
 
 const managerRoutes = Router();
 const managerRepository = new ManagerRepository();
@@ -55,7 +57,8 @@ const managerController = new ManagerController(managerService);
  *       500:
  *         description: Erro no servidor
  */
-managerRoutes.post('/', (req, res) => managerController.create(req, res));
+managerRoutes.post('/', validate(createManagerSchema), (req, res) => managerController.create(req, res));
+
 
 /**
  * @swagger
@@ -141,8 +144,7 @@ managerRoutes.get('/', (req, res) => managerController.getAll(req, res));
  *       500:
  *         description: Erro no servidor
  */
-managerRoutes.put('/:id', (req, res) => managerController.update(req, res));
-
+managerRoutes.put('/:id', validate(updateManagerSchema), (req, res) => managerController.update(req, res));
 /**
  * @swagger
  * /managers/{id}:

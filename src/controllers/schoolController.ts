@@ -13,11 +13,13 @@ export class SchoolController {
 
   async create(req: Request, res: Response): Promise<Response> {
     try {
+      console.log('Creating school');
       const schoolData: CreateSchoolDTO = req.body;
       const newSchool = await this.schoolService.createSchool(schoolData);
       return res.status(201).json(newSchool);
     } catch (error) {
       if (error instanceof Error) {
+        console.error('Erro capturado:', error);
         return res.status(500).json({ error: error.message });
       }
       return res.status(500).json({ error: 'Unknown error occurred' });
@@ -55,27 +57,32 @@ export class SchoolController {
   async update(req: Request, res: Response): Promise<Response> {
     try {
       const { id } = req.params;
-      const schoolData: Partial<CreateSchoolDTO> = req.body;
-      const updatedSchool = await this.schoolService.updateSchool(id, schoolData);
+      const updatedSchool = await this.schoolService.updateSchool(id, req.body);
+      
+      if (!updatedSchool) {
+        return res.status(404).json({ message: 'School not found' });
+      }
+
       return res.status(200).json(updatedSchool);
     } catch (error) {
-      if (error instanceof Error) {
-        return res.status(500).json({ error: error.message });
-      }
-      return res.status(500).json({ error: 'Unknown error occurred' });
+      console.error('Error updating school:', error);
+      return res.status(500).json({ message: 'Internal server error' });
     }
   }
-
-  async delete(req: Request, res: Response): Promise<Response> {
+  
+  async delete(req: Request, res: Response) {
     try {
       const { id } = req.params;
-      await this.schoolService.deleteSchool(id);
-      return res.status(204).send();
-    } catch (error) {
-      if (error instanceof Error) {
-        return res.status(500).json({ error: error.message });
+      const deletedSchool = await this.schoolService.deleteSchool(id);
+  
+      if (!deletedSchool) {
+        return res.status(404).json({ message: 'School not found' });
       }
-      return res.status(500).json({ error: 'Unknown error occurred' });
+  
+      return res.status(200).json({ message: 'School deleted successfully' });
+    } catch (error) {
+      return res.status(500).json({ message: 'Internal server error', error: error.message });
     }
   }
+  
 }

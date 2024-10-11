@@ -2,6 +2,9 @@ import { Router } from 'express';
 import { CoordinatorController } from '../controllers/CoordinatorController';
 import { CoordinatorService } from '../services/CoordinatorService';
 import { CoordinatorRepository } from '../repositories/CoordinatorRepository';
+import { validate } from '../middlewares/validationMiddleware';
+import { createCoordinatorValidationSchema, updateCoordinatorValidationSchema } from '../validations/coordinatorValidation';
+
 
 const coordinatorRoutes = Router();
 const coordinatorRepository = new CoordinatorRepository();
@@ -53,7 +56,7 @@ const coordinatorController = new CoordinatorController(coordinatorService);
  *       500:
  *         description: Erro no servidor
  */
-coordinatorRoutes.post('/', (req, res) => coordinatorController.create(req, res));
+coordinatorRoutes.post('/', validate(createCoordinatorValidationSchema), (req, res) => coordinatorController.create(req, res));
 
 /**
  * @swagger
@@ -139,7 +142,7 @@ coordinatorRoutes.get('/', (req, res) => coordinatorController.getAll(req, res))
  *       500:
  *         description: Erro no servidor
  */
-coordinatorRoutes.put('/:id', (req, res) => coordinatorController.update(req, res));
+coordinatorRoutes.put('/:id', validate(updateCoordinatorValidationSchema), (req, res) => coordinatorController.update(req, res));
 
 /**
  * @swagger

@@ -1,18 +1,24 @@
 {
- "compilerOptions": {
-   "target": "ES6", // ou "ES2015"
-   "module": "commonjs",
-   "strict": true,
-   "esModuleInterop": true,
-   "skipLibCheck": true,
-   "outDir": "./dist"
- },
- "include": [
-   "./**/*.ts"
- ],
- "exclude": [
-   "dist",
-   "node_modules",
-   "**/*.spec.ts"
- ]
+  "compilerOptions": {
+    "target": "ES6", // ou "ES2015"
+    "module": "commonjs",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true, // Garante a consistência de maiúsculas/minúsculas
+    "moduleResolution": "node", // Resolver módulos com o estilo do Node.js
+    "outDir": "./dist",
+    "types": ["jest", "node"], // Adiciona suporte aos tipos de Jest e Node
+    "sourceMap": true, // Adiciona source maps para facilitar o debug
+    "resolveJsonModule": true, // Permite a importação de arquivos JSON
+    "isolatedModules": true // Necessário para ambientes de testes como o ts-jest
+  },
+  "include": [
+    "src/**/*.ts", // Inclui todos os arquivos TypeScript na pasta src
+    "tests/**/*.ts" // Inclui arquivos de testes na pasta tests
+  ],
+  "exclude": [
+    "dist",
+    "node_modules"
+  ]
 }

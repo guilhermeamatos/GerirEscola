@@ -2,6 +2,8 @@ import { Router } from 'express';
 import { ClassController } from '../controllers/ClassController';
 import { ClassService } from '../services/ClassService';
 import { ClassRepository } from '../repositories/ClassRepository';
+import { validate } from '../middlewares/validationMiddleware';
+import { createClassValidationSchema, updateClassValidationSchema } from '../validations/classValidation';
 
 const classRoutes = Router();
 const classRepository = new ClassRepository();
@@ -44,7 +46,8 @@ const classController = new ClassController(classService);
  *       500:
  *         description: Erro no servidor
  */
-classRoutes.post('/', (req, res) => classController.create(req, res));
+classRoutes.post('/', validate(createClassValidationSchema), (req, res) => classController.create(req, res));
+
 
 /**
  * @swagger
@@ -121,7 +124,7 @@ classRoutes.get('/', (req, res) => classController.getAll(req, res));
  *       500:
  *         description: Erro no servidor
  */
-classRoutes.put('/:id', (req, res) => classController.update(req, res));
+classRoutes.put('/:id', validate(updateClassValidationSchema), (req, res) => classController.update(req, res));
 
 /**
  * @swagger

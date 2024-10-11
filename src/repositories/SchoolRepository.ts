@@ -76,22 +76,25 @@ export class SchoolRepository {
   }
 
   async update(id: string, data: Partial<Omit<School, 'id' | 'classes' | 'coordinators' | 'manager'>>): Promise<School> {
+    // Faz a conversão da string para Date, se `foundedAt` estiver presente
+    const updateData = {
+      name: data.name,
+      address: data.address,
+      phone: data.phone,
+      email: data.email,
+      founded_at: data.foundedAt ? new Date(data.foundedAt) : undefined, // Conversão correta para Date
+    };
+  
     const updatedSchool = await prisma.school.update({
       where: { id },
-      data: {
-        name: data.name,
-        address: data.address,
-        phone: data.phone,
-        email: data.email,
-        founded_at: data.foundedAt, 
-      },
+      data: updateData,
       include: {
         classes: true,
         coordinators: true,
         manager: true,
       },
     });
-
+  
     return new School(
       updatedSchool.id,
       updatedSchool.name,
