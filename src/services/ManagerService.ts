@@ -24,10 +24,21 @@ export class ManagerService {
   }
 
   async updateManager(id: string, managerData: Partial<CreateManagerDTO>): Promise<ManagerModel> {
+    const existingManager = await this.managerRepository.findById(id);
+    if (!existingManager) {
+      throw new Error('Manager not found');
+    }
+  
     return this.managerRepository.update(id, managerData);
   }
-
+  
   async deleteManager(id: string): Promise<void> {
+    const existingManager = await this.managerRepository.findById(id);
+    if (!existingManager) {
+      throw new Error('Manager not found');
+    }
+  
     await this.managerRepository.delete(id);
   }
+  
 }

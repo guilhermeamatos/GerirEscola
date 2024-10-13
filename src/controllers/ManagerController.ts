@@ -51,7 +51,6 @@ export class ManagerController {
       return res.status(500).json({ error: 'Unknown error occurred' });
     }
   }
-
   async update(req: Request, res: Response): Promise<Response> {
     try {
       const { id } = req.params;
@@ -60,12 +59,15 @@ export class ManagerController {
       return res.status(200).json(updatedManager);
     } catch (error) {
       if (error instanceof Error) {
+        if (error.message === 'Manager not found') {
+          return res.status(404).json({ message: 'Manager not found' });
+        }
         return res.status(500).json({ error: error.message });
       }
       return res.status(500).json({ error: 'Unknown error occurred' });
     }
   }
-
+  
   async delete(req: Request, res: Response): Promise<Response> {
     try {
       const { id } = req.params;
@@ -73,9 +75,13 @@ export class ManagerController {
       return res.status(204).send();
     } catch (error) {
       if (error instanceof Error) {
+        if (error.message === 'Manager not found') {
+          return res.status(404).json({ message: 'Manager not found' });
+        }
         return res.status(500).json({ error: error.message });
       }
       return res.status(500).json({ error: 'Unknown error occurred' });
     }
   }
+  
 }

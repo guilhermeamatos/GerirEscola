@@ -25,10 +25,16 @@ export const createManagerSchema = Joi.object({
 });
 
 export const updateManagerSchema = Joi.object({
-  name: Joi.string().optional(),
-  cpf: Joi.string().length(11).optional(),
-  address: Joi.string().optional(),
-  phone: Joi.string().optional(),
-  email: Joi.string().email().optional(),
-  schoolId: Joi.string().uuid().optional(),
+  name: Joi.string().min(1).max(100).optional().allow(null, ''),  // Permite string vazia mas com erro de validação
+  cpf: Joi.string().length(11).optional().allow(null, ''),
+  address: Joi.string().optional().allow(null, ''),
+  phone: Joi.string().optional().allow(null, ''),
+  email: Joi.string().email().optional().allow(null, ''),
+  schoolId: Joi.string().uuid().optional().allow(null, ''),
+}).custom((value, helpers) => {
+  if (value.name === '' || value.cpf === '') {
+    return helpers.error('any.invalid'); // Retorna erro padrão do Joi
+  }
+  return value;
 });
+
