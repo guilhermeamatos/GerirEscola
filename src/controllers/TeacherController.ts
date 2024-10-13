@@ -56,26 +56,34 @@ export class TeacherController {
     try {
       const { id } = req.params;
       const teacherData: Partial<CreateTeacherDTO> = req.body;
+  
+      // O service já lida com a verificação de existência e lança um erro
       const updatedTeacher = await this.teacherService.updateTeacher(id, teacherData);
       return res.status(200).json(updatedTeacher);
     } catch (error) {
-      if (error instanceof Error) {
-        return res.status(500).json({ error: error.message });
+      if (error instanceof Error && error.message === 'Teacher not found') {
+        // Retorna 404 quando o professor não é encontrado
+        return res.status(404).json({ message: error.message });
       }
-      return res.status(500).json({ error: 'Unknown error occurred' });
+      // Outros erros são tratados com status 500
+      return res.status(500).json({ error: 'An unexpected error occurred' });
     }
   }
-
+  
   async delete(req: Request, res: Response): Promise<Response> {
     try {
       const { id } = req.params;
+  
+      // O service já lida com a verificação de existência e lança um erro
       await this.teacherService.deleteTeacher(id);
-      return res.status(204).send();
+      return res.status(204).send(); // Sucesso, sem conteúdo
     } catch (error) {
-      if (error instanceof Error) {
-        return res.status(500).json({ error: error.message });
+      if (error instanceof Error && error.message === 'Teacher not found') {
+        // Retorna 404 quando o professor não é encontrado
+        return res.status(404).json({ message: error.message });
       }
-      return res.status(500).json({ error: 'Unknown error occurred' });
+      // Outros erros são tratados com status 500
+      return res.status(500).json({ error: 'An unexpected error occurred' });
     }
   }
 }

@@ -22,12 +22,21 @@ export class TeacherService {
   async getAllTeachers(): Promise<TeacherModel[]> {
     return this.teacherRepository.findAll();
   }
-
   async updateTeacher(id: string, teacherData: Partial<CreateTeacherDTO>): Promise<TeacherModel> {
+    const teacher = await this.teacherRepository.findById(id);
+    if (!teacher) {
+      throw new Error('Teacher not found');
+    }
+  
     return this.teacherRepository.update(id, teacherData);
   }
-
+  
   async deleteTeacher(id: string): Promise<void> {
+    const teacher = await this.teacherRepository.findById(id);
+    if (!teacher) {
+      throw new Error('Teacher not found');
+    }
+  
     await this.teacherRepository.delete(id);
-  }
+  }  
 }
