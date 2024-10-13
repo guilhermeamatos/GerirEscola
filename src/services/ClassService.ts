@@ -24,10 +24,24 @@ export class ClassService {
   }
 
   async updateClass(id: string, classData: Partial<CreateClassDTO>): Promise<ClassModel> {
+    // Verifica se a classe existe
+    const existingClass = await this.classRepository.findById(id);
+    if (!existingClass) {
+      throw new Error('Class not found'); // Pode ser substituído por um erro customizado se houver
+    }
+    
+    // Se a classe existe, realiza a atualização
     return this.classRepository.update(id, classData);
   }
-
+  
   async deleteClass(id: string): Promise<void> {
+    // Verifica se a classe existe
+    const existingClass = await this.classRepository.findById(id);
+    if (!existingClass) {
+      throw new Error('Class not found'); // Pode ser substituído por um erro customizado se houver
+    }
+  
+    // Se a classe existe, realiza a exclusão
     await this.classRepository.delete(id);
-  }
+  }  
 }

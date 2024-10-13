@@ -10,8 +10,9 @@ export const createClassValidationSchema = Joi.object({
 
 // Validação para atualização de uma turma existente
 export const updateClassValidationSchema = Joi.object({
-  name: Joi.string().min(3).max(100).optional(),
+  name: Joi.string().min(3).max(100).optional().allow(null).allow(''),
   schoolYear: Joi.string().min(4).max(9).optional(),
   schoolId: Joi.string().uuid().optional(), // ID da escola pode ser alterado
   teacherId: Joi.string().uuid().optional(), // O teacherId também pode ser alterado
-});
+}).with('name', 'schoolYear');
+

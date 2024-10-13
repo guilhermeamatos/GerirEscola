@@ -52,6 +52,7 @@ export class ClassController {
     }
   }
 
+
   async update(req: Request, res: Response): Promise<Response> {
     try {
       const { id } = req.params;
@@ -60,22 +61,29 @@ export class ClassController {
       return res.status(200).json(updatedClass);
     } catch (error) {
       if (error instanceof Error) {
+        if (error.message === 'Class not found') {
+          return res.status(404).json({ error: 'Class not found' }); // Retorna 404 se a classe não for encontrada
+        }
         return res.status(500).json({ error: error.message });
       }
       return res.status(500).json({ error: 'Unknown error occurred' });
     }
   }
-
+  
   async delete(req: Request, res: Response): Promise<Response> {
     try {
       const { id } = req.params;
       await this.classService.deleteClass(id);
-      return res.status(204).send();
+      return res.status(204).send(); // Retorna 204 se a exclusão foi bem-sucedida
     } catch (error) {
       if (error instanceof Error) {
+        if (error.message === 'Class not found') {
+          return res.status(404).json({ error: 'Class not found' }); // Retorna 404 se a classe não for encontrada
+        }
         return res.status(500).json({ error: error.message });
       }
       return res.status(500).json({ error: 'Unknown error occurred' });
     }
   }
+  
 }

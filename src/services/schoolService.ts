@@ -59,7 +59,7 @@ export class SchoolService {
     }
   }
 
-  async updateSchool(id: string, data: UpdateSchoolDTO): Promise<SchoolModel | null> {
+  async updateSchool(id: string, data: CreateSchoolDTO): Promise<SchoolModel | null> {
     try {
       const school = await this.schoolRepository.findById(id);
       if (!school) {
