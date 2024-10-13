@@ -43,26 +43,22 @@ export class CoordinatorService {
       throw new Error('Unknown error occurred while fetching coordinators');
     }
   }
-
+  
   async updateCoordinator(id: string, coordinatorData: Partial<CreateCoordinatorDTO>): Promise<Coordinator> {
-    try {
-      return await this.coordinatorRepository.update(id, coordinatorData);
-    } catch (error) {
-      if (error instanceof Error) {
-        throw new Error(`Error updating coordinator: ${error.message}`);
-      }
-      throw new Error('Unknown error occurred while updating coordinator');
+    const coordinator = await this.coordinatorRepository.findById(id);
+    if (!coordinator) {
+      throw new Error('Coordinator not found'); // Certifique-se de que este erro seja lançado corretamente
     }
+    return await this.coordinatorRepository.update(id, coordinatorData);
   }
+  
+// Deletar coordenador no service
+async deleteCoordinator(id: string): Promise<void> {
+  const coordinator = await this.coordinatorRepository.findById(id); // Verifique se o coordenador existe
+  if (!coordinator) {
+    throw new Error('Coordinator not found'); // Lançar erro se o coordenador não for encontrado
+  }
+  await this.coordinatorRepository.delete(id);
+}
 
-  async deleteCoordinator(id: string): Promise<void> {
-    try {
-      await this.coordinatorRepository.delete(id);
-    } catch (error) {
-      if (error instanceof Error) {
-        throw new Error(`Error deleting coordinator: ${error.message}`);
-      }
-      throw new Error('Unknown error occurred while deleting coordinator');
-    }
-  }
 }

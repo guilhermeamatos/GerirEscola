@@ -14,6 +14,7 @@ export class CoordinatorController {
   async create(req: Request, res: Response): Promise<Response> {
     try {
       const coordinatorData: CreateCoordinatorDTO = req.body;
+      
       const newCoordinator = await this.coordinatorService.createCoordinator(coordinatorData);
       return res.status(201).json(newCoordinator);
     } catch (error) {
@@ -51,7 +52,7 @@ export class CoordinatorController {
       return res.status(500).json({ error: 'Unknown error occurred' });
     }
   }
-
+  
   async update(req: Request, res: Response): Promise<Response> {
     try {
       const { id } = req.params;
@@ -59,23 +60,25 @@ export class CoordinatorController {
       const updatedCoordinator = await this.coordinatorService.updateCoordinator(id, coordinatorData);
       return res.status(200).json(updatedCoordinator);
     } catch (error) {
-      if (error instanceof Error) {
-        return res.status(500).json({ error: error.message });
+      if (error instanceof Error && error.message === 'Coordinator not found') {
+        return res.status(404).json({ message: error.message }); // Aqui garantimos que o 404 será retornado
       }
-      return res.status(500).json({ error: 'Unknown error occurred' });
+      return res.status(500).json({ error: 'An unexpected error occurred' });
     }
   }
+  
+// Deletar coordenador no controller
+async delete(req: Request, res: Response): Promise<Response> {
+  try {
+    const { id } = req.params;
+    await this.coordinatorService.deleteCoordinator(id);
+    return res.status(204).send(); // Sucesso sem conteúdo
+  } catch (error) {
+    if (error instanceof Error && error.message === 'Coordinator not found') {
+      return res.status(404).json({ message: error.message }); // Retornar 404 se o coordenador não for encontrado
+    }
+    return res.status(500).json({ error: 'An unexpected error occurred' });
+  }
+}
 
-  async delete(req: Request, res: Response): Promise<Response> {
-    try {
-      const { id } = req.params;
-      await this.coordinatorService.deleteCoordinator(id);
-      return res.status(204).send();
-    } catch (error) {
-      if (error instanceof Error) {
-        return res.status(500).json({ error: error.message });
-      }
-      return res.status(500).json({ error: 'Unknown error occurred' });
-    }
-  }
 }
