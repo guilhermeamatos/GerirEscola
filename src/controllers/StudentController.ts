@@ -52,30 +52,35 @@ export class StudentController {
     }
   }
 
-  async update(req: Request, res: Response): Promise<Response> {
-    try {
-      const { id } = req.params;
-      const studentData: Partial<CreateStudentDTO> = req.body;
-      const updatedStudent = await this.studentService.updateStudent(id, studentData);
-      return res.status(200).json(updatedStudent);
-    } catch (error) {
-      if (error instanceof Error) {
-        return res.status(500).json({ error: error.message });
-      }
-      return res.status(500).json({ error: 'Unknown error occurred' });
-    }
-  }
+  // Método para atualizar um estudante
+// Método para atualizar um estudante
+async update(req: Request, res: Response): Promise<Response> {
+  try {
+    const { id } = req.params;
+    const studentData: Partial<CreateStudentDTO> = req.body;
 
-  async delete(req: Request, res: Response): Promise<Response> {
-    try {
-      const { id } = req.params;
-      await this.studentService.deleteStudent(id);
-      return res.status(204).send();
-    } catch (error) {
-      if (error instanceof Error) {
-        return res.status(500).json({ error: error.message });
-      }
-      return res.status(500).json({ error: 'Unknown error occurred' });
+    const updatedStudent = await this.studentService.updateStudent(id, studentData);
+    return res.status(200).json(updatedStudent);
+  } catch (error) {
+    if (error instanceof Error && error.message === 'Student not found') {
+      return res.status(404).json({ message: error.message });
     }
+    return res.status(500).json({ error: 'An unexpected error occurred' });
+  }
+}
+
+// Método para deletar um estudante
+async delete(req: Request, res: Response): Promise<Response> {
+  try {
+    const { id } = req.params;
+
+    await this.studentService.deleteStudent(id);
+    return res.status(204).send(); // Sucesso, sem conteúdo
+  } catch (error) {
+    if (error instanceof Error && error.message === 'Student not found') {
+      return res.status(404).json({ message: error.message });
+    }
+    return res.status(500).json({ error: 'An unexpected error occurred' });
+  }
   }
 }

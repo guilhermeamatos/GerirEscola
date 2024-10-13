@@ -13,6 +13,11 @@ export class StudentService {
 
   async createStudent(studentData: CreateStudentDTO): Promise<Student> {
     try {
+      // Verifique se 'birthdate' está presente e o converta para o formato Date
+      if (studentData.birthdate) {
+        studentData.birthdate = new Date(studentData.birthdate);
+      }
+  
       return await this.studentRepository.create(studentData);
     } catch (error) {
       if (error instanceof Error) {
@@ -45,24 +50,25 @@ export class StudentService {
   }
 
   async updateStudent(id: string, studentData: Partial<CreateStudentDTO>): Promise<Student> {
-    try {
-      return await this.studentRepository.update(id, studentData);
-    } catch (error) {
-      if (error instanceof Error) {
-        throw new Error(`Error updating student: ${error.message}`);
-      }
-      throw new Error('Unknown error occurred while updating student');
+    const student = await this.studentRepository.findById(id);
+    if (!student) {
+      throw new Error('Student not found');
     }
+  
+    // Converte a data de nascimento para o formato Date, se estiver presente
+    if (studentData.birthdate) {
+      studentData.birthdate = new Date(studentData.birthdate);
+    }
+  
+    return await this.studentRepository.update(id, studentData);
   }
-
+  
   async deleteStudent(id: string): Promise<void> {
-    try {
-      await this.studentRepository.delete(id);
-    } catch (error) {
-      if (error instanceof Error) {
-        throw new Error(`Error deleting student: ${error.message}`);
-      }
-      throw new Error('Unknown error occurred while deleting student');
+    const student = await this.studentRepository.findById(id);
+    if (!student) {
+      throw new Error('Student not found');
     }
+  
+    await this.studentRepository.delete(id);
   }
 }
