@@ -12,6 +12,7 @@ export class CoordinatorRepository {
         address: coordinatorData.address,
         phone: coordinatorData.phone,
         email: coordinatorData.email,
+        password: coordinatorData.password,
         school_id: coordinatorData.schoolId,
       },
       include: {
@@ -26,6 +27,7 @@ export class CoordinatorRepository {
       newCoordinator.address,
       newCoordinator.phone,
       newCoordinator.email,
+      "",
       newCoordinator.school_id
     );
   }
@@ -47,6 +49,7 @@ export class CoordinatorRepository {
       coordinator.address,
       coordinator.phone,
       coordinator.email,
+      "",
       coordinator.school_id
     );
   }
@@ -66,6 +69,7 @@ export class CoordinatorRepository {
         coordinator.address,
         coordinator.phone,
         coordinator.email,
+        "",
         coordinator.school_id
       );
     });
@@ -94,6 +98,7 @@ export class CoordinatorRepository {
       updatedCoordinator.address,
       updatedCoordinator.phone,
       updatedCoordinator.email,
+      "",
       updatedCoordinator.school_id
     );
   }

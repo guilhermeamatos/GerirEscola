@@ -18,6 +18,7 @@ export const createManagerSchema = Joi.object({
     'string.empty': 'O email é obrigatório',
     'string.email': 'O email deve ser válido',
   }),
+  password: Joi.string().min(6).max(20).optional(),
   schoolId: Joi.string().uuid().required().messages({
     'string.empty': 'O ID da escola é obrigatório',
     'string.guid': 'O ID da escola deve ser um UUID válido',

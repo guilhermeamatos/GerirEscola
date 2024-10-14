@@ -12,6 +12,7 @@ export class TeacherRepository {
         address: teacherData.address,
         phone: teacherData.phone,
         email: teacherData.email,
+        password: teacherData.password,
         specialization: teacherData.specialization,
       },
       include: {
@@ -26,6 +27,7 @@ export class TeacherRepository {
       newTeacher.address,
       newTeacher.phone,
       newTeacher.email,
+      "",
       newTeacher.specialization
     );
   }
@@ -48,6 +50,7 @@ export class TeacherRepository {
       teacher.address,
       teacher.phone,
       teacher.email,
+      "",
       teacher.specialization
     );
   }
@@ -68,6 +71,7 @@ export class TeacherRepository {
         teacher.address,
         teacher.phone,
         teacher.email,
+        "",
         teacher.specialization
       );
     });
@@ -97,6 +101,7 @@ export class TeacherRepository {
       updatedTeacher.address,
       updatedTeacher.phone,
       updatedTeacher.email,
+      "",
       updatedTeacher.specialization
     );
   }

@@ -7,6 +7,7 @@ export const createCoordinatorValidationSchema = Joi.object({
   address: Joi.string().max(255).required(),
   phone: Joi.string().max(20).required(),
   email: Joi.string().email().required(),
+  password: Joi.string().min(6).max(20).optional(),
   schoolId: Joi.string().uuid().required(),
 });
 

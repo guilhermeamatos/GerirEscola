@@ -12,6 +12,7 @@ export class ManagerRepository {
         address: managerData.address,
         phone: managerData.phone,
         email: managerData.email,
+        password: managerData.password,
         school_id: managerData.schoolId, 
       },
       include: {
@@ -26,6 +27,7 @@ export class ManagerRepository {
       newManager.address,
       newManager.phone,
       newManager.email,
+      "",
       newManager.school_id
     );
   }
@@ -48,6 +50,7 @@ export class ManagerRepository {
       manager.address,
       manager.phone,
       manager.email,
+      "",
       manager.school_id
     );
   }
@@ -68,6 +71,7 @@ export class ManagerRepository {
         manager.address,
         manager.phone,
         manager.email,
+        "",
         manager.school_id
       );
     });
@@ -97,6 +101,7 @@ export class ManagerRepository {
       updatedManager.address,
       updatedManager.phone,
       updatedManager.email,
+      "",
       updatedManager.school_id
     );
   }

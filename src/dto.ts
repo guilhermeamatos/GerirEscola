@@ -20,6 +20,7 @@ export interface CreateClassDTO {
     address: string;
     phone: string;
     email: string;
+    password: string;
     specialization: string;
   }
   
@@ -29,6 +30,7 @@ export interface CreateClassDTO {
     address: string;
     phone: string;
     email: string;
+    password: string;
     schoolId: string;
   }
   
@@ -38,6 +40,7 @@ export interface CreateClassDTO {
     address: string;
     phone: string;
     email: string;
+    password: string;
     schoolId: string;
   }
   // src/dto.ts

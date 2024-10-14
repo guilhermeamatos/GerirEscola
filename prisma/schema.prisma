@@ -42,7 +42,8 @@ model Teacher {
   cpf           String      @unique
   address       String
   phone         String
-  email         String
+  email         String 
+  password      String?
   specialization String
   classes       Class[]
 }
@@ -65,7 +66,8 @@ model Coordinator {
   cpf        String      @unique
   address    String
   phone      String
-  email      String
+  email      String 
+  password   String?
   school_id  String
   school     School      @relation(fields: [school_id], references: [id])
 }
@@ -76,7 +78,8 @@ model Manager {
   cpf        String      @unique
   address    String
   phone      String
-  email      String
+  email      String 
+  password   String?
   school_id  String      @unique
   school     School      @relation(fields: [school_id], references: [id])
 }
