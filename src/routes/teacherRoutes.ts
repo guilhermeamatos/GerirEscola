@@ -170,4 +170,6 @@ teacherRoutes.put('/:id', validate(updateTeacherValidationSchema), (req, res) =>
  */
 teacherRoutes.delete('/:id', (req, res) => teacherController.delete(req, res));
 
+teacherRoutes.post('/login', (req, res) => teacherController.login(req, res));
+
 export { teacherRoutes };

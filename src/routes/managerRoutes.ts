@@ -168,4 +168,6 @@ managerRoutes.put('/:id', validate(updateManagerSchema), (req, res) => managerCo
  */
 managerRoutes.delete('/:id', (req, res) => managerController.delete(req, res));
 
+managerRoutes.post('/login', (req, res) => managerController.login(req, res));
+
 export { managerRoutes };

@@ -3,6 +3,7 @@
 import { CoordinatorRepository } from '../repositories/CoordinatorRepository';
 import { Coordinator } from '../models/Coordinator';
 import { CreateCoordinatorDTO } from '../dto';
+import { sign } from 'jsonwebtoken';
 
 export class CoordinatorService {
   private coordinatorRepository: CoordinatorRepository;
@@ -59,6 +60,17 @@ async deleteCoordinator(id: string): Promise<void> {
     throw new Error('Coordinator not found'); // Lançar erro se o coordenador não for encontrado
   }
   await this.coordinatorRepository.delete(id);
+}
+
+
+async login(email: string, password: string): Promise<string> {
+  const coordinator = await this.coordinatorRepository.findByEmail(email);
+  console.log(coordinator);
+  if (!coordinator || coordinator.password !== password) {
+    throw new Error('Invalid credentials');
+  }
+  const token = sign({ id: coordinator.id }, 'your_jwt_secret_key', { expiresIn: '1h' });
+  return token;
 }
 
 }

@@ -108,4 +108,10 @@ export class CoordinatorRepository {
       where: { id },
     });
   }
+
+  async findByEmail(email: string) {
+    return prisma.coordinator.findUnique({
+      where: { email },
+    });
+  }
 }

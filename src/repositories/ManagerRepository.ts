@@ -112,4 +112,10 @@ export class ManagerRepository {
       where: { id },
     });
   }
+
+  async findByEmail(email: string) {
+    return prisma.manager.findUnique({
+      where: { email },
+    });
+  }
 }

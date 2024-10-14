@@ -167,4 +167,6 @@ coordinatorRoutes.put('/:id', validate(updateCoordinatorValidationSchema), (req,
  */
 coordinatorRoutes.delete('/:id', (req, res) => coordinatorController.delete(req, res));
 
+coordinatorRoutes.post('/login', (req, res) => coordinatorController.login(req, res));
+
 export { coordinatorRoutes };

@@ -112,4 +112,10 @@ export class TeacherRepository {
       where: { id },
     });
   }
+
+  async findByEmail(email: string) {
+    return prisma.teacher.findUnique({
+      where: { email },
+    });
+  }
 }

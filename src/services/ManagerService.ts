@@ -3,6 +3,7 @@
 import { ManagerRepository } from '../repositories/ManagerRepository';
 import { Manager as ManagerModel } from '../models/Manager';
 import { CreateManagerDTO } from '../dto';
+import { sign } from 'jsonwebtoken';
 
 export class ManagerService {
   private managerRepository: ManagerRepository;
@@ -39,6 +40,16 @@ export class ManagerService {
     }
   
     await this.managerRepository.delete(id);
+  }
+
+  async login(email: string, password: string): Promise<string> {
+    console.log("passei aqui");
+    const manager = await this.managerRepository.findByEmail(email);
+    if (!manager || manager.password !== password) {
+      throw new Error('Invalid credentials');
+    }
+    const token = sign({ id: manager.id }, 'your_jwt_secret_key', { expiresIn: '1h' });
+    return token;
   }
   
 }

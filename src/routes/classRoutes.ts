@@ -3,6 +3,7 @@ import { ClassController } from '../controllers/ClassController';
 import { ClassService } from '../services/ClassService';
 import { ClassRepository } from '../repositories/ClassRepository';
 import { validate } from '../middlewares/validationMiddleware';
+import { authMiddleware } from '../middlewares/authMiddleware';
 import { createClassValidationSchema, updateClassValidationSchema } from '../validations/classValidation';
 
 const classRoutes = Router();
@@ -46,7 +47,7 @@ const classController = new ClassController(classService);
  *       500:
  *         description: Erro no servidor
  */
-classRoutes.post('/', validate(createClassValidationSchema), (req, res) => classController.create(req, res));
+classRoutes.post('/', authMiddleware, validate(createClassValidationSchema), (req, res) => classController.create(req, res));
 
 
 /**

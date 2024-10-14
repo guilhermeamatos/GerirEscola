@@ -3,6 +3,7 @@
 import { TeacherRepository } from '../repositories/TeacherRepository';
 import { Teacher as TeacherModel } from '../models/Teacher';
 import { CreateTeacherDTO } from '../dto';
+import { sign } from 'jsonwebtoken';
 
 export class TeacherService {
   private teacherRepository: TeacherRepository;
@@ -38,5 +39,14 @@ export class TeacherService {
     }
   
     await this.teacherRepository.delete(id);
-  }  
+  } 
+  
+  async login(email: string, password: string): Promise<string> {
+    const teacher = await this.teacherRepository.findByEmail(email);
+    if (!teacher || teacher.password !== password) {
+      throw new Error('Invalid credentials');
+    }
+    const token = sign({ id: teacher.id }, 'your_jwt_secret_key', { expiresIn: '1h' });
+    return token;
+  }
 }
