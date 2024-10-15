@@ -13,11 +13,13 @@ export class ManagerController {
 
   async create(req: Request, res: Response): Promise<Response> {
     try {
+      console.log(req.body);
       const managerData: CreateManagerDTO = req.body;
       const newManager = await this.managerService.createManager(managerData);
       return res.status(201).json(newManager);
     } catch (error) {
       if (error instanceof Error) {
+        console.log(error.message);
         return res.status(500).json({ error: error.message });
       }
       return res.status(500).json({ error: 'Unknown error occurred' });

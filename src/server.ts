@@ -7,9 +7,14 @@ import { teacherRoutes } from './routes/teacherRoutes';
 import { studentRoutes } from './routes/studentRoutes';
 import { coordinatorRoutes } from './routes/coordinatorRoutes';
 import { managerRoutes } from './routes/managerRoutes';
+import cors from 'cors';
 
 const app = express();
 app.use(express.json());
+
+app.use(cors({
+  origin: 'http://localhost:3001'  
+}));
 
 // Configurações do Swagger
 const swaggerOptions = {
