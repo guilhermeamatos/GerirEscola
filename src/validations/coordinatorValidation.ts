@@ -8,7 +8,6 @@ export const createCoordinatorValidationSchema = Joi.object({
   phone: Joi.string().max(20).required(),
   email: Joi.string().email().required(),
   password: Joi.string().min(6).max(20).optional(),
-  schoolId: Joi.string().uuid().required(),
 });
 
 // Validação para atualização de um coordenador existente
@@ -25,7 +24,6 @@ export const updateCoordinatorValidationSchema = Joi.object({
   address: Joi.string().max(255).optional(),
   phone: Joi.string().max(20).optional(),
   email: Joi.string().email().optional(),
-  schoolId: Joi.string().uuid().optional(),
 });
 
 

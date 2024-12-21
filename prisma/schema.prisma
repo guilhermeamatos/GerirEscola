@@ -21,7 +21,6 @@ model School {
   email       String
   founded_at  DateTime
   classes     Class[]
-  coordinators Coordinator[]
   manager     Manager?
 }
 
@@ -68,8 +67,6 @@ model Coordinator {
   phone      String
   email      String      @unique
   password   String?
-  school_id  String
-  school     School      @relation(fields: [school_id], references: [id])
 }
 
 model Manager {

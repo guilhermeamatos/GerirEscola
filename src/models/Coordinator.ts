@@ -7,10 +7,8 @@ export class Coordinator {
     phone: string;
     email: string;
     password: string;
-    schoolId: string;
-    school?: School;
   
-    constructor(id: string, name: string, cpf: string, address: string, phone: string, email: string,password: string, schoolId: string) {
+    constructor(id: string, name: string, cpf: string, address: string, phone: string, email: string,password: string) {
       this.id = id;
       this.name = name;
       this.cpf = cpf;
@@ -18,7 +16,6 @@ export class Coordinator {
       this.phone = phone;
       this.email = email;
       this.password = password;
-      this.schoolId = schoolId;
     }
 
   }

@@ -15,7 +15,6 @@ export class SchoolRepository {
       },
       include: {
         classes: true,
-        coordinators: true,
         manager: true,
       },
     });
@@ -34,7 +33,6 @@ export class SchoolRepository {
     const schools = await prisma.school.findMany({
       include: {
         classes: true,
-        coordinators: true,
         manager: true,
       },
     });
@@ -56,7 +54,6 @@ export class SchoolRepository {
       where: { id },
       include: {
         classes: true,
-        coordinators: true,
         manager: true,
       },
     });
@@ -90,7 +87,6 @@ export class SchoolRepository {
       data: updateData,
       include: {
         classes: true,
-        coordinators: true,
         manager: true,
       },
     });

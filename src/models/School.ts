@@ -12,7 +12,6 @@ export class School {
     email: string;
     foundedAt: Date;
     classes: Class[] = [];
-    coordinators: Coordinator[] = [];
     manager?: Manager;
   
     constructor(id: string, name: string, address: string, phone: string, email: string, foundedAt: Date) {

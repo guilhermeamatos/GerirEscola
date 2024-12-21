@@ -13,11 +13,7 @@ export class CoordinatorRepository {
         phone: coordinatorData.phone,
         email: coordinatorData.email,
         password: coordinatorData.password,
-        school_id: coordinatorData.schoolId,
-      },
-      include: {
-        school: true,
-      },
+      }
     });
 
     return new CoordinatorModel(
@@ -28,16 +24,12 @@ export class CoordinatorRepository {
       newCoordinator.phone,
       newCoordinator.email,
       "",
-      newCoordinator.school_id
     );
   }
 
   async findById(id: string): Promise<CoordinatorModel | null> {
     const coordinator = await prisma.coordinator.findUnique({
       where: { id },
-      include: {
-        school: true,
-      },
     });
 
     if (!coordinator) return null;
@@ -49,16 +41,12 @@ export class CoordinatorRepository {
       coordinator.address,
       coordinator.phone,
       coordinator.email,
-      "",
-      coordinator.school_id
+      ""
     );
   }
 
   async findAll(): Promise<CoordinatorModel[]> {
     const coordinators = await prisma.coordinator.findMany({
-      include: {
-        school: true,
-      },
     });
 
     return coordinators.map((coordinator) => {
@@ -69,8 +57,7 @@ export class CoordinatorRepository {
         coordinator.address,
         coordinator.phone,
         coordinator.email,
-        "",
-        coordinator.school_id
+        ""
       );
     });
   }
@@ -83,12 +70,8 @@ export class CoordinatorRepository {
         cpf: coordinatorData.cpf,
         address: coordinatorData.address,
         phone: coordinatorData.phone,
-        email: coordinatorData.email,
-        school_id: coordinatorData.schoolId ?? undefined,
-      },
-      include: {
-        school: true,
-      },
+        email: coordinatorData.email
+      }
     });
 
     return new CoordinatorModel(
@@ -98,8 +81,7 @@ export class CoordinatorRepository {
       updatedCoordinator.address,
       updatedCoordinator.phone,
       updatedCoordinator.email,
-      "",
-      updatedCoordinator.school_id
+      ""
     );
   }
 
