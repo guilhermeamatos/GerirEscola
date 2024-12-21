@@ -44,12 +44,12 @@ const swaggerDocs = swaggerJsDoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 // Rotas da aplicação
-app.use('/schools', schoolRoutes);
-app.use('/classes', classRoutes);
-app.use('/teachers', teacherRoutes);
-app.use('/students', studentRoutes);
-app.use('/coordinators', coordinatorRoutes);
-app.use('/managers', managerRoutes);
+app.use('/api/schools', schoolRoutes);
+app.use('/api/classes', classRoutes);
+app.use('/api/teachers', teacherRoutes);
+app.use('/api/students', studentRoutes);
+app.use('/api/coordinators', coordinatorRoutes);
+app.use('/api/managers', managerRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
