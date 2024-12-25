@@ -37,6 +37,8 @@ model Class {
 
 model Teacher {
   id            String      @id @default(uuid())
+  matricula    String?      @unique
+  concursado   Boolean 
   name          String
   cpf           String      @unique
   address       String

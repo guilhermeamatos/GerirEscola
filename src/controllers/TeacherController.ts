@@ -14,6 +14,7 @@ export class TeacherController {
   async create(req: Request, res: Response): Promise<Response> {
     try {
       const teacherData: CreateTeacherDTO = req.body;
+      console.log(req.body);
       const newTeacher = await this.teacherService.createTeacher(teacherData);
       return res.status(201).json(newTeacher);
     } catch (error) {

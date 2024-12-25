@@ -16,6 +16,8 @@ export interface CreateClassDTO {
   
   export interface CreateTeacherDTO {
     name: string;
+    matricula: string;
+    concursado: boolean;
     cpf: string;
     address: string;
     phone: string;

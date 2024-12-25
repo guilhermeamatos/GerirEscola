@@ -14,6 +14,8 @@ export class TeacherRepository {
         email: teacherData.email,
         password: teacherData.password,
         specialization: teacherData.specialization,
+        matricula: teacherData.matricula,
+        concursado: teacherData.concursado,
       },
       include: {
         classes: true, 
@@ -28,11 +30,12 @@ export class TeacherRepository {
       newTeacher.phone,
       newTeacher.email,
       "",
-      newTeacher.specialization
+      newTeacher.specialization ?? "",
+      newTeacher.matricula ?? "",
+      newTeacher.concursado ?? false // Use um valor padrão para booleano, se necessário
     );
   }
 
- 
   async findById(id: string): Promise<TeacherModel | null> {
     const teacher = await prisma.teacher.findUnique({
       where: { id },
@@ -51,11 +54,12 @@ export class TeacherRepository {
       teacher.phone,
       teacher.email,
       "",
-      teacher.specialization
+      teacher.specialization ?? "",
+      teacher.matricula ?? "",
+      teacher.concursado ?? false
     );
   }
 
-  
   async findAll(): Promise<TeacherModel[]> {
     const teachers = await prisma.teacher.findMany({
       include: {
@@ -72,12 +76,13 @@ export class TeacherRepository {
         teacher.phone,
         teacher.email,
         "",
-        teacher.specialization
+        teacher.specialization ?? "",
+        teacher.matricula ?? "",
+        teacher.concursado ?? false
       );
     });
   }
 
- 
   async update(id: string, teacherData: Partial<Omit<TeacherModel, 'id' | 'classes'>>): Promise<TeacherModel> {
     const updatedTeacher = await prisma.teacher.update({
       where: { id },
@@ -102,11 +107,12 @@ export class TeacherRepository {
       updatedTeacher.phone,
       updatedTeacher.email,
       "",
-      updatedTeacher.specialization
+      updatedTeacher.specialization ?? "",
+      updatedTeacher.matricula ?? "",
+      updatedTeacher.concursado ?? false
     );
   }
 
-  
   async delete(id: string): Promise<void> {
     await prisma.teacher.delete({
       where: { id },

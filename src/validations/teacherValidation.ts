@@ -4,10 +4,11 @@ import Joi from 'joi';
 export const createTeacherValidationSchema = Joi.object({
   name: Joi.string().min(3).max(100).required(),
   cpf: Joi.string().length(11).required(),
+  matricula: Joi.string().max(20).optional(),
+  concursado: Joi.boolean().required(),
   address: Joi.string().max(255).required(),
   phone: Joi.string().max(20).required(),
   email: Joi.string().email().required(),
-  password: Joi.string().min(6).max(20).optional(),
   specialization: Joi.string().max(255).required(),
 });
 
