@@ -124,4 +124,21 @@ export class TeacherRepository {
       where: { email },
     });
   }
+  async getTeacherByCPF(cpf: string) {
+    return prisma.teacher.findUnique({
+      where: { cpf },
+    });
+  }
+
+  async getTeacherByEmail(email: string) {
+    return prisma.teacher.findUnique({
+      where: { email },
+    });
+  }
+
+  async getTeacherByMatricula(matricula: string) {
+    return prisma.teacher.findUnique({
+      where: { matricula },
+    });
+  }
 }

@@ -11,8 +11,39 @@ export class TeacherService {
   constructor(teacherRepository: TeacherRepository) {
     this.teacherRepository = teacherRepository;
   }
+  async dataValidation(teacherData: CreateTeacherDTO) {
+    const { cpf, email, matricula } = teacherData;
+
+    // Verificar CPF
+    const existingTeacherByCPF = await this.teacherRepository.getTeacherByCPF(cpf);
+    if (existingTeacherByCPF) {
+      throw new Error("Um professor já está cadastrado com este CPF.");
+    }
+
+    // Verificar Email
+    const existingTeacherByEmail = await this.teacherRepository.getTeacherByEmail(email);
+    if (existingTeacherByEmail) {
+      throw new Error("Um professor já está cadastrado com este email.");
+    }
+
+    // Verificar Matricula (se fornecida)
+    if (matricula) {
+      const existingTeacherByMatricula = await this.teacherRepository.getTeacherByMatricula(matricula);
+      if (existingTeacherByMatricula) {
+        throw new Error("Um professor já está cadastrado com esta matrícula.");
+      }
+    }
+
+    return "Validação concluída com sucesso.";
+  }
+  generatePassword(teacherData: CreateTeacherDTO){
+    const password = teacherData.cpf.slice(0, 3) + teacherData.name.split(' ')[0];
+    return password;
+  }
 
   async createTeacher(teacherData: CreateTeacherDTO): Promise<TeacherModel> {
+    await this.dataValidation(teacherData);
+    teacherData.password = this.generatePassword(teacherData)
     return this.teacherRepository.create(teacherData);
   }
 
