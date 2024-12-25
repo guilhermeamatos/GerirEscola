@@ -46,6 +46,23 @@ export class TeacherService {
     teacherData.password = this.generatePassword(teacherData)
     return this.teacherRepository.create(teacherData);
   }
+  async processSpreadsheet(data: any[]) {
+    for (const row of data) {
+      const teacherData: CreateTeacherDTO = {
+        name: row['name'],
+        matricula: row['matricula'],
+        concursado: row['concursado'] === 'true',
+        cpf: row['cpf'],
+        address: row['address'],
+        phone: row['phone'],
+        email: row['email'],
+        password: row['password'],
+        specialization: row['specialization'],
+      };
+
+      await this.createTeacher(teacherData);
+    }
+  };
 
   async getTeacherById(id: string): Promise<TeacherModel | null> {
     return this.teacherRepository.findById(id);

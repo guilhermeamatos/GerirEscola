@@ -5,6 +5,7 @@ import { TeacherController } from '../controllers/TeacherController';
 import { TeacherService } from '../services/TeacherService';
 import { TeacherRepository } from '../repositories/TeacherRepository';
 import { validate } from '../middlewares/validationMiddleware';
+import upload from '../middlewares/upload';
 import { createTeacherValidationSchema, updateTeacherValidationSchema } from '../validations/teacherValidation';
 
 const teacherRoutes = Router();
@@ -172,4 +173,5 @@ teacherRoutes.delete('/:id', (req, res) => teacherController.delete(req, res));
 
 teacherRoutes.post('/login', (req, res) => teacherController.login(req, res));
 
+teacherRoutes.post('/upload', upload.single('file'), teacherController.processTeacherSpreadsheet);
 export { teacherRoutes };

@@ -3,6 +3,8 @@
 import { Request, Response } from 'express';
 import { TeacherService } from '../services/TeacherService';
 import { CreateTeacherDTO } from '../dto';
+import * as fs from 'fs';
+import * as xlsx from 'xlsx';
 
 export class TeacherController {
   private teacherService: TeacherService;
@@ -97,4 +99,29 @@ export class TeacherController {
       return res.status(401).json({ message: 'Invalid credentials' });
    }
   }
+
+  
+  public processTeacherSpreadsheet = async (req: Request, res: Response) => {
+    const filePath = req.file?.path;
+
+    if (!filePath) {
+      return res.status(400).json({ error: 'Nenhum arquivo foi enviado' });
+    }
+
+    try {
+      const fileBuffer = fs.readFileSync(filePath);
+      const workbook = xlsx.read(fileBuffer, { type: 'buffer' });
+      const sheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[sheetName];
+      const data = xlsx.utils.sheet_to_json(worksheet);
+
+      await this.teacherService.processSpreadsheet(data);
+
+      res.status(200).json({ message: 'Professores criados com sucesso' });
+    } catch (error) {
+      res.status(500).json({ error: 'Erro ao processar a planilha' });
+    } finally {
+      fs.unlinkSync(filePath); // Remove o arquivo após o processamento
+    }
+  };
 }
