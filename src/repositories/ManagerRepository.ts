@@ -9,7 +9,6 @@ export class ManagerRepository {
       data: {
         name: managerData.name,
         cpf: managerData.cpf,
-        address: managerData.address,
         phone: managerData.phone,
         email: managerData.email,
         password: managerData.password,
@@ -24,11 +23,10 @@ export class ManagerRepository {
       newManager.id,
       newManager.name,
       newManager.cpf,
-      newManager.address,
       newManager.phone,
       newManager.email,
       "",
-      newManager.school_id
+      newManager.school_id ?? ""
     );
   }
 
@@ -47,11 +45,10 @@ export class ManagerRepository {
       manager.id,
       manager.name,
       manager.cpf,
-      manager.address,
       manager.phone,
       manager.email,
       "",
-      manager.school_id
+      manager.school_id ?? ""
     );
   }
 
@@ -68,11 +65,10 @@ export class ManagerRepository {
         manager.id,
         manager.name,
         manager.cpf,
-        manager.address,
         manager.phone,
         manager.email,
         "",
-        manager.school_id
+        manager.school_id ?? ""
       );
     });
   }
@@ -84,7 +80,6 @@ export class ManagerRepository {
       data: {
         name: managerData.name,
         cpf: managerData.cpf,
-        address: managerData.address,
         phone: managerData.phone,
         email: managerData.email,
         school_id: managerData.schoolId ?? undefined, 
@@ -98,11 +93,10 @@ export class ManagerRepository {
       updatedManager.id,
       updatedManager.name,
       updatedManager.cpf,
-      updatedManager.address,
       updatedManager.phone,
       updatedManager.email,
       "",
-      updatedManager.school_id
+      updatedManager.school_id ?? ""
     );
   }
 

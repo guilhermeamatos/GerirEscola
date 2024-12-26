@@ -84,10 +84,9 @@ model Manager {
   id         String      @id @default(uuid())
   name       String
   cpf        String      @unique
-  address    String
   phone      String
   email      String      @unique
   password   String?
-  school_id  String      @unique
-  school     School      @relation(fields: [school_id], references: [id])
+  school_id  String?     @unique
+  school     School?      @relation(fields: [school_id], references: [id])
 }

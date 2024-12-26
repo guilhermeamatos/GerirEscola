@@ -39,7 +39,6 @@ export interface CreateClassDTO {
   export interface CreateManagerDTO {
     name: string;
     cpf: string;
-    address: string;
     phone: string;
     email: string;
     password: string;

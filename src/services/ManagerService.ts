@@ -11,8 +11,13 @@ export class ManagerService {
   constructor(managerRepository: ManagerRepository) {
     this.managerRepository = managerRepository;
   }
-
+  generatePassword(managerData: CreateManagerDTO){
+      const password = managerData.cpf.slice(0, 3) + managerData.name.split(' ')[0];
+      return password;
+  }
+  
   async createManager(managerData: CreateManagerDTO): Promise<ManagerModel> {
+    managerData.password = this.generatePassword(managerData)
     return this.managerRepository.create(managerData);
   }
 
