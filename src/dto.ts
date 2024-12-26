@@ -1,4 +1,4 @@
-
+import { Nivel } from './enums/Nivel';
 export interface CreateClassDTO {
     name: string;
     schoolYear: string;
@@ -52,7 +52,7 @@ export interface CreateSchoolDTO {
     address: string;
     phone: string;
     email: string;
-    foundedAt: Date;
+    nivel: Nivel;
   }
   
   

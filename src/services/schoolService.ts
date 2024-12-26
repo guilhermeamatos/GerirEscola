@@ -13,18 +13,11 @@ export class SchoolService {
 
   async createSchool(schoolData: CreateSchoolDTO): Promise<SchoolModel> {
     try {
-      // Converte o campo 'foundedAt' para uma instância de Date se estiver no formato string
-      const foundedAt = new Date(schoolData.foundedAt);
-      
-      // Verifica se a data é válida
-      if (isNaN(foundedAt.getTime())) {
-        throw new Error('Invalid date format for foundedAt');
-      }
+    
 
       // Passa os dados convertidos para o repositório
       return await this.schoolRepository.create({
         ...schoolData,
-        foundedAt,  // Substitui a string de data pela instância de Date
       });
     } catch (error) {
       if (error instanceof Error) {
@@ -69,7 +62,6 @@ export class SchoolService {
       // Conversão da data se estiver presente no DTO
       const updatedData = {
         ...data,
-        founded_at: data.foundedAt ? new Date(data.foundedAt) : undefined,
       };
   
       return await this.schoolRepository.update(id, updatedData);

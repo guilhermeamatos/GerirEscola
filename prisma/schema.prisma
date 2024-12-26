@@ -17,11 +17,20 @@ model School {
   id          String       @id @default(uuid())
   name        String
   address     String
+  nivel       nivel
   phone       String
   email       String
-  founded_at  DateTime
   classes     Class[]
-  manager     Manager?
+  manager     Manager[]
+}
+
+enum nivel {
+  INFANTIL
+  FUNDAMENTAL_1
+  FUNDAMENTAL_2
+  FUNDAMENTAL_1_2
+  INFANTIL_FUNDAMENTAL_1
+  INFANTIL_FUNDAMENTAL_1_2
 }
 
 model Class {

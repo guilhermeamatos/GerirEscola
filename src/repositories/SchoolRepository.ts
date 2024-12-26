@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { School } from "../models/School";
+import { Nivel } from "../enums/Nivel";
 
 const prisma = new PrismaClient();
 
@@ -11,7 +12,7 @@ export class SchoolRepository {
         address: data.address,
         phone: data.phone,
         email: data.email,
-        founded_at: data.foundedAt, 
+        nivel: data.nivel
       },
       include: {
         classes: true,
@@ -25,7 +26,7 @@ export class SchoolRepository {
       school.address,
       school.phone,
       school.email,
-      school.founded_at,
+      school.nivel as Nivel,
     );
   }
 
@@ -44,7 +45,7 @@ export class SchoolRepository {
         school.address,
         school.phone,
         school.email,
-        school.founded_at
+        school.nivel as Nivel,
       )
     );
   }
@@ -68,7 +69,7 @@ export class SchoolRepository {
       school.address,
       school.phone,
       school.email,
-      school.founded_at
+      school.nivel as Nivel,
     );
   }
 
@@ -79,7 +80,7 @@ export class SchoolRepository {
       address: data.address,
       phone: data.phone,
       email: data.email,
-      founded_at: data.foundedAt ? new Date(data.foundedAt) : undefined, // Conversão correta para Date
+      nivel: data.nivel,
     };
   
     const updatedSchool = await prisma.school.update({
@@ -97,7 +98,7 @@ export class SchoolRepository {
       updatedSchool.address,
       updatedSchool.phone,
       updatedSchool.email,
-      updatedSchool.founded_at
+      updatedSchool.nivel as Nivel,
     );
   }
 

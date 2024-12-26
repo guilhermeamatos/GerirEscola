@@ -14,9 +14,14 @@ export const createSchoolSchema = Joi.object({
     'string.empty': 'O email é obrigatório',
     'string.email': 'O email deve ser válido',
   }),
-  foundedAt: Joi.date().required().messages({
-    'date.base': 'A data de fundação é obrigatória',
+  nivel: Joi.string()
+  .valid('INFANTIL', 'FUNDAMENTAL_1', 'FUNDAMENTAL_2', 'FUNDAMENTAL_1_2', 'INFANTIL_FUNDAMENTAL_1', 'INFANTIL_FUNDAMENTAL_1_2')
+  .required()
+  .messages({
+    'string.empty': 'O nível é obrigatório',
+    'any.only': 'O nível deve ser um dos seguintes valores: INFANTIL, FUNDAMENTAL_1, FUNDAMENTAL_2, FUNDAMENTAL_1_2, INFANTIL_FUNDAMENTAL_1, INFANTIL_FUNDAMENTAL_1_2',
   }),
+
 });
 
 export const updateSchoolSchema = Joi.object({
