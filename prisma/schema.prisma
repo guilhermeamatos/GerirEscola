@@ -131,6 +131,6 @@ model Manager {
   phone      String
   email      String      @unique
   password   String?
-  school_id  String?     @unique
-  school     School?      @relation(fields: [school_id], references: [id])
+  school_id  String    
+  school     School      @relation(fields: [school_id], references: [id])
 }

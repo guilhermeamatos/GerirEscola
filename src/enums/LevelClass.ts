@@ -1,0 +1,6 @@
+export enum LevelClass {
+    INFANTIL = 'INFANTIL',
+    FUNDAMENTAL_1 = 'FUNDAMENTAL_1',
+    FUNDAMENTAL_2 = 'FUNDAMENTAL_2'
+  }
+  
