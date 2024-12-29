@@ -141,4 +141,23 @@ export class TeacherRepository {
       where: { matricula },
     });
   }
+  async findTeachersBySchoolId(schoolId: string) {
+    return await prisma.teacher.findMany({
+      where: {
+        schools: {
+          some: {
+            id: schoolId,
+          },
+        },
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        phone: true,
+        specialization: true,
+      },
+    });
+  }
+
 }

@@ -97,4 +97,14 @@ export class TeacherService {
     const token = sign({ id: teacher.id }, 'your_jwt_secret_key', { expiresIn: '1h' });
     return token;
   }
+  async getTeachersBySchool(schoolId: string) {
+    if (!schoolId) {
+      throw new Error('School ID is required');
+    }
+
+    const teachers = await this.teacherRepository.findTeachersBySchoolId(schoolId);
+    
+    return teachers;
+  }
+
 }

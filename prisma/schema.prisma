@@ -22,6 +22,7 @@ model School {
   email       String
   classes     Class[]
   manager     Manager[]
+  teachers    Teacher[]     @relation("TeacherSchool")
 }
 
 enum nivel {
@@ -88,8 +89,8 @@ model TeacherClass {
 
 model Teacher {
   id            String      @id @default(uuid())
-  matricula    String?      @unique
-  concursado   Boolean 
+  matricula     String?      @unique
+  concursado    Boolean 
   name          String
   cpf           String      @unique
   address       String
@@ -99,6 +100,7 @@ model Teacher {
   subjects      TeacherSubject[]
   classes       TeacherClass[]
   specialization String
+  schools       School[]     @relation("TeacherSchool")
 }
 
 model Student {

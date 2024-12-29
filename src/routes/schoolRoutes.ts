@@ -18,4 +18,7 @@ schoolRoutes.get('/', (req, res) => schoolController.getAll(req, res));
 schoolRoutes.put('/:id', validate(updateSchoolSchema), (req, res) => schoolController.update(req, res));
 schoolRoutes.delete('/:id', (req, res) => schoolController.delete(req, res));
 
+schoolRoutes.get('/:schoolId/teachers', (req, res) => schoolController.getTeachersBySchool(req, res));
+
+
 export { schoolRoutes };

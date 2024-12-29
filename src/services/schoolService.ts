@@ -1,14 +1,21 @@
 // src/services/SchoolService.ts
 
 import { SchoolRepository } from '../repositories/SchoolRepository';
+import {TeacherRepository} from '../repositories/TeacherRepository';
 import { School as SchoolModel } from '../models/School';
 import { CreateSchoolDTO } from '../dto';
+import { TeacherService } from './TeacherService';
 
 export class SchoolService {
   private schoolRepository: SchoolRepository;
+  private teacherService: TeacherService;
+  private teacherRepository: TeacherRepository = new TeacherRepository();
+  
 
   constructor(schoolRepository: SchoolRepository) {
     this.schoolRepository = schoolRepository;
+    this.teacherService = new TeacherService(this.teacherRepository);
+
   }
 
   async createSchool(schoolData: CreateSchoolDTO): Promise<SchoolModel> {
@@ -78,5 +85,12 @@ export class SchoolService {
     }
     await this.schoolRepository.delete(id);
     return true;
+  }
+  async getTeachersBySchool(schoolId: string) {
+    if (!schoolId) {
+      throw new Error('School ID is required');
+    }
+
+    return await this.teacherService.getTeachersBySchool(schoolId);
   }
 }

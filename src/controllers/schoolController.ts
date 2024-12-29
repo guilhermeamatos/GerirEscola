@@ -93,4 +93,23 @@ export class SchoolController {
   
     }
   } 
+
+  async getTeachersBySchool(req: Request, res: Response) {
+    try {
+      const schoolId = req.params.schoolId;
+  
+      const teachers = await this.schoolService.getTeachersBySchool(schoolId);
+  
+      if (!teachers || teachers.length === 0) {
+        // Retorna 204 No Content se não houver professores associados
+        return res.status(204).send();
+      }
+  
+      return res.status(200).json(teachers);
+    } catch (error: any) {
+      // Outros erros são tratados como inesperados
+      return res.status(500).json({ error: 'An unexpected error occurred' });
+    }
+  }
+  
 }
