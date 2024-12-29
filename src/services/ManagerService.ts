@@ -48,12 +48,11 @@ export class ManagerService {
   }
 
   async login(email: string, password: string): Promise<string> {
-    console.log("passei aqui");
     const manager = await this.managerRepository.findByEmail(email);
     if (!manager || manager.password !== password) {
       throw new Error('Invalid credentials');
     }
-    const token = sign({ id: manager.id }, 'your_jwt_secret_key', { expiresIn: '1h' });
+    const token = sign({ id: manager.id, schoolId: manager.school_id }, 'your_jwt_secret_key', { expiresIn: '1h' });
     return token;
   }
   

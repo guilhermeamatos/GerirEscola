@@ -1,8 +1,10 @@
 import { Nivel } from './enums/Nivel';
+import {nivelClass } from '@prisma/client';
 export interface CreateClassDTO {
     name: string;
-    schoolYear: string;
+    schoolYear: number;
     schoolId: string;
+    level: nivelClass;
   }
   
   export interface CreateStudentDTO {
@@ -12,6 +14,7 @@ export interface CreateClassDTO {
     address: string;
     phone: string;
     email: string;
+    schoolYear: number;
   }
   
   export interface CreateTeacherDTO {

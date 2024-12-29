@@ -1,10 +1,12 @@
 import Joi from 'joi';
+import {nivelClass } from '@prisma/client';
 
 // Validação para criação de uma nova turma
 export const createClassValidationSchema = Joi.object({
   name: Joi.string().min(3).max(100).required(),
-  schoolYear: Joi.string().min(4).max(9).required(),
-  schoolId: Joi.string().uuid().required(), // ID da escola é obrigatório
+  schoolYear: Joi.number().integer().min(1).max(14).required(),
+  schoolId: Joi.string().uuid().required(),
+  level: Joi.string().valid(...Object.values(nivelClass)).required(),
   teacherId: Joi.string().uuid().optional(), // O teacherId pode ser opcional dependendo da lógica de negócio
 });
 

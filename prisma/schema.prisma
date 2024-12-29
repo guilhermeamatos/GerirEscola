@@ -36,12 +36,54 @@ enum nivel {
 model Class {
   id          String       @id @default(uuid())
   name        String
-  school_year String
+  nivel       nivelClass
+  numberOfStudents Int
+  school_year Int
   school_id   String
+  teachers    TeacherClass[]
   school      School      @relation(fields: [school_id], references: [id])
-  teacher     Teacher?     @relation(fields: [teacher_id], references: [id])
-  teacher_id  String?
   students    Student[]
+  subject     TeacherSubject[]
+}
+model Subject {
+  id          String       @id @default(uuid())
+  teacher_id  String
+  teachers    TeacherSubject[]
+  name        nameSubjects
+}
+model TeacherSubject {
+  id          String       @id @default(uuid())
+  teacher_id  String
+  teacher    Teacher     @relation(fields: [teacher_id], references: [id])
+  subject_id  String
+  subject     Subject     @relation(fields: [subject_id], references: [id])
+  turma_id   String
+  turma     Class      @relation(fields: [turma_id], references: [id])
+}
+
+enum nameSubjects{
+  LINGUA_PORTUGUESA
+  MATEMATICA
+  CIENCIAS
+  HISTORIA
+  GEOGRAFIA
+  ARTE
+  EDUCACAO_FISICA
+  ENSINO_RELIGIOSO
+  INGLES
+}
+
+enum nivelClass {
+  INFANTIL
+  FUNDAMENTAL_1
+  FUNDAMENTAL_2
+}
+model TeacherClass {
+  id          String       @id @default(uuid())
+  teacher_id  String
+  teacher    Teacher     @relation(fields: [teacher_id], references: [id])
+  class_id    String
+  class       Class      @relation(fields: [class_id], references: [id])
 }
 
 model Teacher {
@@ -54,8 +96,9 @@ model Teacher {
   phone         String
   email         String      @unique
   password      String?
+  subjects      TeacherSubject[]
+  classes       TeacherClass[]
   specialization String
-  classes       Class[]
 }
 
 model Student {
@@ -66,6 +109,7 @@ model Student {
   address        String
   phone          String
   email          String
+  school_year    Int
   class_id       String?
   class          Class?       @relation(fields: [class_id], references: [id])
 }
