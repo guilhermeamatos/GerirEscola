@@ -15,6 +15,9 @@ export interface CreateClassDTO {
     phone: string;
     email: string;
     schoolYear: number;
+    matricula: string;
+    password: string;
+    schoolId: string;
   }
   
   export interface CreateTeacherDTO {

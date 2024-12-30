@@ -10,22 +10,59 @@ export class StudentService {
   constructor(studentRepository: StudentRepository) {
     this.studentRepository = studentRepository;
   }
+  async generateMatricula(): Promise<string> {
+    const year = new Date().getFullYear().toString().slice(-2); // Últimos dois dígitos do ano atual
+  
+    while (true) {
+      // Gera um número aleatório de 5 dígitos
+      const randomNumber = Math.floor(10000 + Math.random() * 90000);
+      const matricula = `${year}${randomNumber}`;
+  
+      // Verifica se a matrícula já existe
+      const exists = await this.studentRepository.existsMatricula(matricula);
+  
+      if (!exists) {
+        return matricula; // Retorna a matrícula se for única
+      }
+    }
+  }
+  generatePassword(studentData: CreateStudentDTO): string {
+    const day = (studentData.birthdate.getUTCDate()).toString().padStart(2, '0');
+    const month = (studentData.birthdate.getMonth() + 1).toString().padStart(2, '0');
+
+    
+    const name = studentData.name.split(' ')[0]
+      .normalize('NFD') 
+      .replace(/[\u0300-\u036f]/g, '') 
+      .toLowerCase();
+
+    
+    return `${day}${month}${name}`;
+  }
 
   async createStudent(studentData: CreateStudentDTO): Promise<Student> {
     try {
-      // Verifique se 'birthdate' está presente e o converta para o formato Date
-      if (studentData.birthdate) {
-        studentData.birthdate = new Date(studentData.birthdate);
-      }
-  
-      return await this.studentRepository.create(studentData);
+        if (studentData.birthdate) {
+            if (typeof studentData.birthdate === 'string') {
+                const parsedDate = new Date(studentData.birthdate);
+                if (isNaN(parsedDate.getTime())) {
+                    throw new Error('Data de nascimento inválida. Use um formato válido.');
+                }
+                studentData.birthdate = new Date(parsedDate.toISOString().split('T')[0]);
+            }
+        }
+        studentData.matricula = await this.generateMatricula();
+        studentData.password = this.generatePassword(studentData);
+
+        return await this.studentRepository.create(studentData);
     } catch (error) {
-      if (error instanceof Error) {
-        throw new Error(`Error creating student: ${error.message}`);
-      }
-      throw new Error('Unknown error occurred while creating student');
+        if (error instanceof Error) {
+            throw new Error(`Error creating student: ${error.message}`);
+        }
+        throw new Error('Unknown error occurred while creating student');
     }
   }
+
 
   async getStudentById(id: string): Promise<Student | null> {
     try {

@@ -23,6 +23,7 @@ model School {
   classes     Class[]
   manager     Manager[]
   teachers    Teacher[]     @relation("TeacherSchool")
+  students    Student[]
 }
 
 enum nivel {
@@ -106,14 +107,18 @@ model Teacher {
 model Student {
   id             String      @id @default(uuid())
   name           String
+  matricula      String?      @unique
   birthdate      DateTime
   cpf            String      @unique
-  address        String
-  phone          String
-  email          String
+  address        String?
+  phone          String?
+  email          String?
   school_year    Int
+  password       String?
   class_id       String?
   class          Class?       @relation(fields: [class_id], references: [id])
+  school_id      String
+  school         School       @relation(fields: [school_id], references: [id])
 }
 
 model Coordinator {
