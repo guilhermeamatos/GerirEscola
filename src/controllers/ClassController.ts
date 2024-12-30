@@ -13,7 +13,13 @@ export class ClassController {
 
   async create(req: Request, res: Response): Promise<Response> {
     try {
-      const classData: CreateClassDTO = req.body;
+      const classData: CreateClassDTO = {
+        name: req.body.name,
+        schoolId: req.body.schoolId,
+        schoolYear: parseInt(req.body.schoolYear, 10),
+        level: req.body.level,
+      }
+      
       const newClass = await this.classService.createClass(classData);
       return res.status(201).json(newClass);
     } catch (error) {
