@@ -114,4 +114,18 @@ export class ClassRepository {
       where: { id },
     });
   }
+  async findBySchool(schoolId: string): Promise<boolean> {
+    try {
+      // Tenta encontrar a escola pelo ID
+      const school = await prisma.school.findUnique({
+        where: { id: schoolId },
+      });
+
+      // Retorna true se a escola for encontrada, false caso contrário
+      return !!school;
+    } catch (error) {
+      console.error('Error while checking school existence:', error);
+      throw new Error('Unable to verify school existence');
+    }
+  }
 }

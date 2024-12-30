@@ -10,8 +10,15 @@ export class ClassService {
   constructor(classRepository: ClassRepository) {
     this.classRepository = classRepository;
   }
+  async validateClass(classData: CreateClassDTO): Promise<void> {
+    const existSchool = await this.classRepository.findBySchool(classData.schoolId);
+    if (!existSchool) {
+      throw new Error('School not found');
+    }
+  }
 
   async createClass(classData: CreateClassDTO): Promise<ClassModel> {
+    await this.validateClass(classData);
     return this.classRepository.create(classData);
   }
 
