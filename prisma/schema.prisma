@@ -45,23 +45,17 @@ model Class {
   teachers    TeacherClass[]
   school      School      @relation(fields: [school_id], references: [id])
   students    Student[]
-  subject     TeacherSubject[]
+  subjects    Subject[]
 }
 model Subject {
   id          String       @id @default(uuid())
-  teacher_id  String
-  teachers    TeacherSubject[]
+  teacher_id  String?
+  teacher     Teacher?    @relation(fields: [teacher_id], references: [id])
+  class_id    String?
+  class       Class?      @relation(fields: [class_id], references: [id])
   name        nameSubjects
 }
-model TeacherSubject {
-  id          String       @id @default(uuid())
-  teacher_id  String
-  teacher    Teacher     @relation(fields: [teacher_id], references: [id])
-  subject_id  String
-  subject     Subject     @relation(fields: [subject_id], references: [id])
-  turma_id   String
-  turma     Class      @relation(fields: [turma_id], references: [id])
-}
+
 
 enum nameSubjects{
   LINGUA_PORTUGUESA
@@ -98,7 +92,7 @@ model Teacher {
   phone         String
   email         String      @unique
   password      String?
-  subjects      TeacherSubject[]
+  subjects      Subject[]
   classes       TeacherClass[]
   specialization String
   schools       School[]     @relation("TeacherSchool")

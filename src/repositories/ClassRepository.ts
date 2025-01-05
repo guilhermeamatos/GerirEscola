@@ -145,4 +145,16 @@ export class ClassRepository {
       classData.nivel
     ));
   }
+
+   async relateSubjectsToClass(classId: string, subjectIds: string[]): Promise<void> {
+    const updateOperations = subjectIds.map(subjectId => {
+      return prisma.subject.update({
+        where: { id: subjectId },
+        data: { class_id: classId },
+      });
+    });
+
+    await prisma.$transaction(updateOperations);
+  }
+
 }

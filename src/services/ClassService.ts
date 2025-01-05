@@ -3,12 +3,16 @@
 import { ClassRepository } from '../repositories/ClassRepository';
 import { Class as ClassModel } from '../models/Class';
 import { CreateClassDTO } from '../dto';
+import { SubjectRepository } from '../repositories/SubjectRepository';
+import { SubjectService } from './SubjectService';
 
 export class ClassService {
   private classRepository: ClassRepository;
+  private subjectService: SubjectService;
 
   constructor(classRepository: ClassRepository) {
     this.classRepository = classRepository;
+    this.subjectService = new SubjectService(new SubjectRepository());
   }
   async validateClass(classData: CreateClassDTO): Promise<void> {
     const existSchool = await this.classRepository.findBySchool(classData.schoolId);
@@ -18,8 +22,25 @@ export class ClassService {
   }
 
   async createClass(classData: CreateClassDTO): Promise<ClassModel> {
+    let createdSubjects;
+
+    if (classData.level === "FUNDAMENTAL_1") {
+      createdSubjects = await this.subjectService.createSubjectsForFundamental1();
+    } else if (classData.level === "FUNDAMENTAL_2") {
+      createdSubjects = await this.subjectService.createSubjectsForFundamental2();
+    }
+
     await this.validateClass(classData);
-    return this.classRepository.create(classData);
+
+    
+    const createdClass = await this.classRepository.create(classData);
+
+    
+    const subjectIds = createdSubjects?.map(subject => subject.id);
+    if (subjectIds) {
+      await this.classRepository.relateSubjectsToClass(createdClass.id, subjectIds);
+    }
+    return createdClass;
   }
 
   async getClassById(id: string): Promise<ClassModel | null> {

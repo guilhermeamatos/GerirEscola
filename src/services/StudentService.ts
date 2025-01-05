@@ -2,13 +2,17 @@
 
 import { StudentRepository } from '../repositories/StudentRepository';
 import { Student } from '../models/Student';
+import { SubjectRepository } from '../repositories/SubjectRepository';
+import { SubjectService } from './SubjectService';
 import { CreateStudentDTO } from '../dto';
 
 export class StudentService {
   private studentRepository: StudentRepository;
+  private subjectService: SubjectService;
 
   constructor(studentRepository: StudentRepository) {
     this.studentRepository = studentRepository;
+    this.subjectService = new SubjectService(new SubjectRepository());
   }
   async generateMatricula(): Promise<string> {
     const year = new Date().getFullYear().toString().slice(-2); // Últimos dois dígitos do ano atual
