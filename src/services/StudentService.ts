@@ -9,10 +9,12 @@ import { CreateStudentDTO } from '../dto';
 export class StudentService {
   private studentRepository: StudentRepository;
   private subjectService: SubjectService;
+  private subjectRepository: SubjectRepository;
 
   constructor(studentRepository: StudentRepository) {
     this.studentRepository = studentRepository;
-    this.subjectService = new SubjectService(new SubjectRepository());
+    this.subjectRepository = new SubjectRepository();
+    this.subjectService = new SubjectService(this.subjectRepository);
   }
   async generateMatricula(): Promise<string> {
     const year = new Date().getFullYear().toString().slice(-2); // Últimos dois dígitos do ano atual
@@ -81,13 +83,33 @@ export class StudentService {
         studentData.matricula = await this.generateMatricula();
         studentData.password = this.generatePassword(studentData);
 
-        return await this.studentRepository.create(studentData);
+        const createStudent = await this.studentRepository.create(studentData);
+
+        this.enrollStudentInClass(createStudent.id, studentData.classId);
+
+        return createStudent;
     } catch (error) {
         if (error instanceof Error) {
             throw new Error(`Error creating student: ${error.message}`);
         }
         throw new Error('Unknown error occurred while creating student');
     }
+  }
+
+  async enrollStudentInClass(studentId: string, classId: string) {
+    const subjects = await this.subjectRepository.getSubjectsByClass(classId);
+
+    if (subjects.length === 0) {
+      throw new Error('Não há disciplinas associadas a essa classe.');
+    }
+
+    const enrollments = subjects.map(subject =>
+      this.subjectRepository.createEnrollment(studentId, subject.id)
+    );
+
+    await Promise.all(enrollments);
+
+    console.log(`Estudante com ID ${studentId} matriculado em todas as disciplinas da classe ${classId}.`);
   }
 
 

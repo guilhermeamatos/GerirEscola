@@ -54,6 +54,19 @@ model Subject {
   class_id    String?
   class       Class?      @relation(fields: [class_id], references: [id])
   name        nameSubjects
+  enrollments    Enrollment[]
+}
+
+model Enrollment {
+  id           String    @id @default(uuid())
+  student_id   String
+  subject_id   String
+  grade        Float?    
+  attendance   Float?  
+  student      Student  @relation(fields: [student_id], references: [id])
+  subject      Subject  @relation(fields: [subject_id], references: [id])
+
+  @@unique([student_id, subject_id]) 
 }
 
 
@@ -98,6 +111,8 @@ model Teacher {
   schools       School[]     @relation("TeacherSchool")
 }
 
+
+
 model Student {
   id             String      @id @default(uuid())
   name           String
@@ -113,6 +128,7 @@ model Student {
   class          Class?       @relation(fields: [class_id], references: [id])
   school_id      String
   school         School       @relation(fields: [school_id], references: [id])
+  enrollments    Enrollment[]
 }
 
 model Coordinator {

@@ -21,4 +21,23 @@ export class SubjectRepository {
             throw error; // Relança o erro para ser tratado no nível superior
         }
     }
+
+    async getSubjectsByClass(classId: string) {
+        return prisma.subject.findMany({
+          where: {
+            class_id: classId,
+          },
+        });
+      }
+
+    async createEnrollment(studentId: string, subjectId: string) {
+    return prisma.enrollment.create({
+        data: {
+        student_id: studentId,
+        subject_id: subjectId,
+        grade: null, // Inicialmente a nota é nula
+        attendance: null, // Inicialmente a frequência é nula
+          },
+        });
+      }
 }

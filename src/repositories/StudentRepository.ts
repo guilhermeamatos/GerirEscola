@@ -4,8 +4,9 @@ import { Student as StudentModel } from '../models/Student';
 const prisma = new PrismaClient();
 
 export class StudentRepository {
-  async create(studentData: Omit<StudentModel, 'id' | 'class' | 'classId'>): Promise<StudentModel> {
+  async create(studentData: Omit<StudentModel, 'id' | 'class'> & { classId?: string }): Promise<StudentModel> {
     try {
+      console.log(studentData);
       const newStudent = await prisma.student.create({
         data: {
           name: studentData.name,
@@ -23,6 +24,11 @@ export class StudentRepository {
               id: studentData.schoolId, 
             },
           },
+          class: studentData.classId ? {
+            connect: {
+              id: studentData.classId,
+            },
+          } : undefined,
         },
         include: {
           class: true,
