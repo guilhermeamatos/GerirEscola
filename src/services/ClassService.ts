@@ -51,4 +51,17 @@ export class ClassService {
     // Se a classe existe, realiza a exclusão
     await this.classRepository.delete(id);
   }  
+
+  async getClassesBySchoolId(schoolId: string): Promise<ClassModel[]> {
+    if (!schoolId) {
+      throw new Error('O ID da escola é obrigatório.');
+    }
+
+    const classes = await this.classRepository.findClassesBySchoolId(schoolId);
+    if (classes.length === 0) {
+      throw new Error('Nenhuma turma encontrada para a escola fornecida.');
+    }
+
+    return classes;
+  }
 }

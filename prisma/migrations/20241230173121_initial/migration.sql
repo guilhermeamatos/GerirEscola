@@ -79,13 +79,16 @@ CREATE TABLE "Teacher" (
 CREATE TABLE "Student" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
+    "matricula" TEXT,
     "birthdate" TIMESTAMP(3) NOT NULL,
     "cpf" TEXT NOT NULL,
-    "address" TEXT NOT NULL,
-    "phone" TEXT NOT NULL,
-    "email" TEXT NOT NULL,
+    "address" TEXT,
+    "phone" TEXT,
+    "email" TEXT,
     "school_year" INTEGER NOT NULL,
+    "password" TEXT,
     "class_id" TEXT,
+    "school_id" TEXT NOT NULL,
 
     CONSTRAINT "Student_pkey" PRIMARY KEY ("id")
 );
@@ -132,6 +135,9 @@ CREATE UNIQUE INDEX "Teacher_cpf_key" ON "Teacher"("cpf");
 CREATE UNIQUE INDEX "Teacher_email_key" ON "Teacher"("email");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "Student_matricula_key" ON "Student"("matricula");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "Student_cpf_key" ON "Student"("cpf");
 
 -- CreateIndex
@@ -172,6 +178,9 @@ ALTER TABLE "TeacherClass" ADD CONSTRAINT "TeacherClass_class_id_fkey" FOREIGN K
 
 -- AddForeignKey
 ALTER TABLE "Student" ADD CONSTRAINT "Student_class_id_fkey" FOREIGN KEY ("class_id") REFERENCES "Class"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Student" ADD CONSTRAINT "Student_school_id_fkey" FOREIGN KEY ("school_id") REFERENCES "School"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Manager" ADD CONSTRAINT "Manager_school_id_fkey" FOREIGN KEY ("school_id") REFERENCES "School"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

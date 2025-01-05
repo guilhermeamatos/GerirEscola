@@ -18,6 +18,7 @@ export interface CreateClassDTO {
     matricula: string;
     password: string;
     schoolId: string;
+    classId: string;
   }
   
   export interface CreateTeacherDTO {

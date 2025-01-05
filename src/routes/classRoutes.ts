@@ -150,4 +150,8 @@ classRoutes.put('/:id', validate(updateClassValidationSchema), (req, res) => cla
  */
 classRoutes.delete('/:id', (req, res) => classController.delete(req, res));
 
+classRoutes.get('/school/:schoolId', (req, res) =>
+    classController.getClassesBySchoolId(req, res)
+  );
+
 export { classRoutes };

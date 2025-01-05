@@ -34,7 +34,7 @@ export class StudentRepository {
         newStudent.id,
         newStudent.name,
         newStudent.birthdate,
-        newStudent.cpf,
+        newStudent.cpf ?? "",
         newStudent.address ?? "",
         newStudent.phone ?? "",
         newStudent.email ?? "",
@@ -63,7 +63,7 @@ export class StudentRepository {
       student.id,
       student.name,
       student.birthdate,
-      student.cpf,
+      student.cpf ?? "",
       student.address ?? "",
       student.school_year.toString(),
       student.email ?? "",
@@ -86,7 +86,7 @@ export class StudentRepository {
         student.id,
         student.name,
         student.birthdate,
-        student.cpf,
+        student.cpf ?? "",
         student.address ?? "",
         student.phone ?? "",
         student.email ?? "",
@@ -123,7 +123,7 @@ export class StudentRepository {
       updatedStudent.id,
       updatedStudent.name,
       updatedStudent.birthdate,
-      updatedStudent.cpf,
+      updatedStudent.cpf ?? "",
       updatedStudent.address ?? "",
       updatedStudent.phone ?? "",
       updatedStudent.email ?? "",
@@ -147,5 +147,27 @@ export class StudentRepository {
       },
     });
     return !!existingStudent; 
+  }
+
+  async existsCpf(cpf: string): Promise<boolean> {
+    const student = await prisma.student.findUnique({
+      where: { cpf }, // Procura um estudante pelo CPF
+    });
+    return !!student; // Retorna true se encontrar, false caso contrário
+  }
+
+  async existsSchool(school_id: string): Promise<boolean> {
+    const school = await prisma.school.findUnique({
+      where: { id: school_id },
+    });
+    return !!school; // Retorna true se a escola existir
+  }
+
+  
+  async existsClass(class_id: string): Promise<boolean> {
+    const classRecord = await prisma.class.findUnique({
+      where: { id: class_id },
+    });
+    return !!classRecord; // Retorna true se a turma existir
   }
 }

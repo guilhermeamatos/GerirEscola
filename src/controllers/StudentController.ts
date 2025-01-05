@@ -13,12 +13,38 @@ export class StudentController {
 
   async create(req: Request, res: Response): Promise<Response> {
     try {
-      const studentData: CreateStudentDTO = req.body;
+      const studentData: CreateStudentDTO = {
+        name: req.body.name,
+        email: req.body.email,
+        birthdate: req.body.birthdate,
+        classId: req.body.classId,
+        schoolId: req.body.schoolId,
+        cpf: req.body.cpf,
+        address: req.body.address,
+        phone: req.body.phone,
+        schoolYear: parseInt(req.body.schoolYear, 10),
+        matricula: req.body.matricula,
+        password: req.body.password,
+      };
       const newStudent = await this.studentService.createStudent(studentData);
       return res.status(201).json(newStudent);
     } catch (error) {
+      console.error('Error creating student:', error);
       if (error instanceof Error) {
-        return res.status(500).json({ error: error.message });
+        if (error.message.includes('CPF já está cadastrado')) {
+          return res.status(409).json({ error: error.message }); 
+        }else if (error.message.includes('Escola não encontrada')) {
+          return res.status(404).json({ error: error.message }); 
+        }else  if (error.message.includes('Turma não encontrada')) {
+          return res.status(404).json({ error: error.message }); 
+        }
+   
+        
+        else {
+          return res.status(500).json({ error: error.message });
+        }
+
+       
       }
       return res.status(500).json({ error: 'Unknown error occurred' });
     }

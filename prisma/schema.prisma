@@ -109,7 +109,7 @@ model Student {
   name           String
   matricula      String?      @unique
   birthdate      DateTime
-  cpf            String      @unique
+  cpf            String?      @unique
   address        String?
   phone          String?
   email          String?

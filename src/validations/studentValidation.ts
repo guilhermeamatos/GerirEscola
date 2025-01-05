@@ -10,7 +10,7 @@ export const createStudentValidationSchema = Joi.object({
   email: Joi.string().email().optional(),
   schoolYear: Joi.number().integer().min(1).max(14).required(),
   schoolId: Joi.string().uuid().required(),
-  classId: Joi.string().uuid().optional().allow(null), // Classe pode ser opcional
+  classId: Joi.string().uuid().optional().allow(null), 
 });
 
 // Validação para atualização de um aluno existente

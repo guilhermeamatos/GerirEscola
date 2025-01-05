@@ -128,4 +128,21 @@ export class ClassRepository {
       throw new Error('Unable to verify school existence');
     }
   }
+
+  async findClassesBySchoolId(schoolId: string): Promise<ClassModel[]> {
+    const classesFound = await prisma.class.findMany({
+      where: {
+        school_id: schoolId,
+      },
+    });
+
+    return classesFound.map((classData) => new ClassModel(
+      classData.id,
+      classData.name,
+      classData.school_year,
+      classData.school_id,
+      classData.numberOfStudents,
+      classData.nivel
+    ));
+  }
 }

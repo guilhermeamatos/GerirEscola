@@ -7,6 +7,7 @@ export const validate = (schema: ObjectSchema, property: 'body' | 'query' | 'par
 
     if (error) {
       const errors = error.details.map((detail) => detail.message);
+      console.log('Validação falhou:', errors);
       return res.status(400).json({ errors });
     }
     next();

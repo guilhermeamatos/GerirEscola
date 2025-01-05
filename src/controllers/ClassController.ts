@@ -91,5 +91,15 @@ export class ClassController {
       return res.status(500).json({ error: 'Unknown error occurred' });
     }
   }
+
+  async getClassesBySchoolId(req: Request, res: Response): Promise<void> {
+    try {
+      const { schoolId } = req.params; // Pega o ID da escola dos parâmetros da URL
+      const classes = await this.classService.getClassesBySchoolId(schoolId);
+      res.status(200).json(classes); // Retorna as turmas em JSON
+    } catch (error: any) {
+      res.status(400).json({ error: error.message });
+    }
+  }
   
 }

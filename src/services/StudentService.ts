@@ -40,8 +40,31 @@ export class StudentService {
     return `${day}${month}${name}`;
   }
 
+
+  async validateDataBeforeCreate(studentData: CreateStudentDTO): Promise<void> {
+    if(studentData.cpf) {
+      const cpfExists = await this.studentRepository.existsCpf(studentData.cpf);
+      if (cpfExists) {
+        throw new Error(`CPF já está cadastrado: ${studentData.cpf}`);
+      }
+    }
+   
+    const schoolExists = await this.studentRepository.existsSchool(studentData.schoolId);
+    if (!schoolExists) {
+      throw new Error(`Escola não encontrada: ${studentData.schoolId}`);
+    }
+    if (studentData.classId) {
+      const classExists = await this.studentRepository.existsClass(studentData.classId);
+      if (!classExists) {
+        throw new Error(`Turma não encontrada: ${studentData.classId}`);
+      }
+    }
+  }
+  
+
   async createStudent(studentData: CreateStudentDTO): Promise<Student> {
     try {
+        await this.validateDataBeforeCreate(studentData);
         if (studentData.birthdate) {
             if (typeof studentData.birthdate === 'string') {
                 const parsedDate = new Date(studentData.birthdate);
