@@ -47,7 +47,7 @@ const classController = new ClassController(classService);
  *       500:
  *         description: Erro no servidor
  */
-classRoutes.post('/', authMiddleware, validate(createClassValidationSchema), (req, res) => classController.create(req, res));
+classRoutes.post('/', validate(createClassValidationSchema), (req, res) => classController.create(req, res));
 
 
 /**
