@@ -157,4 +157,23 @@ export class ClassRepository {
     await prisma.$transaction(updateOperations);
   }
 
+
+  async findClassesBySchoolAndYear(schoolId: string, schoolYear: number) {
+    return prisma.class.findMany({
+      where: {
+        school_id: schoolId,
+        school_year: schoolYear,
+      },
+      include: {
+        school: true,
+        teachers: {
+          include: { teacher: true },
+        },
+        students: true,
+        subjects: true,
+      },
+    });
+  }
+  
+
 }

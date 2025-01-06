@@ -154,4 +154,8 @@ classRoutes.get('/school/:schoolId', (req, res) =>
     classController.getClassesBySchoolId(req, res)
   );
 
+
+  classRoutes.get('/:schoolId/:schoolYear', (req, res) =>
+    classController.getClassesBySchoolAndYear(req, res),
+  );
 export { classRoutes };

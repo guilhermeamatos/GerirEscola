@@ -101,5 +101,26 @@ export class ClassController {
       res.status(400).json({ error: error.message });
     }
   }
-  
+
+  async getClassesBySchoolAndYear(req: Request, res: Response): Promise<Response> {
+    const { schoolId, schoolYear } = req.params;
+
+    try {
+      const year = parseInt(schoolYear, 10);
+      if (isNaN(year)) {
+        return res.status(400).json({ error: 'Invalid year format' });
+      }
+
+      const classes = await this.classService.getClassesBySchoolAndYear(schoolId, year);
+      return res.status(200).json(classes);
+    } catch (error) {
+      if (error instanceof Error) {
+        if (error.message === 'School not found') {
+          return res.status(404).json({ error: error.message });
+        }
+        return res.status(400).json({ error: error.message });
+      }
+      return res.status(500).json({ error: 'Internal server error' });
+    }
+  }
 }

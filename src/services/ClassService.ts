@@ -5,14 +5,17 @@ import { Class as ClassModel } from '../models/Class';
 import { CreateClassDTO } from '../dto';
 import { SubjectRepository } from '../repositories/SubjectRepository';
 import { SubjectService } from './SubjectService';
+import { SchoolRepository } from '../repositories/SchoolRepository';
 
 export class ClassService {
   private classRepository: ClassRepository;
   private subjectService: SubjectService;
+  private schoolRepository: SchoolRepository;
 
   constructor(classRepository: ClassRepository) {
     this.classRepository = classRepository;
     this.subjectService = new SubjectService(new SubjectRepository());
+    this.schoolRepository = new SchoolRepository();
   }
   async validateClass(classData: CreateClassDTO): Promise<void> {
     const existSchool = await this.classRepository.findBySchool(classData.schoolId);
@@ -81,6 +84,27 @@ export class ClassService {
     const classes = await this.classRepository.findClassesBySchoolId(schoolId);
     if (classes.length === 0) {
       throw new Error('Nenhuma turma encontrada para a escola fornecida.');
+    }
+
+    return classes;
+  }
+
+  async getClassesBySchoolAndYear(schoolId: string, schoolYear: number) {
+    if (!schoolId || !schoolYear) {
+      throw new Error('School ID and School Year are required');
+    }
+
+    // Verifica se a escola existe
+    const school = await this.schoolRepository.findById(schoolId);
+    if (!school) {
+      throw new Error('School not found');
+    }
+
+    // Busca as turmas
+    const classes = await this.classRepository.findClassesBySchoolAndYear(schoolId, schoolYear);
+
+    if (!classes || classes.length === 0) {
+      throw new Error('No classes found for the specified school and year');
     }
 
     return classes;
