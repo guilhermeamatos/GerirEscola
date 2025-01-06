@@ -8,6 +8,8 @@ import { studentRoutes } from './routes/studentRoutes';
 import { coordinatorRoutes } from './routes/coordinatorRoutes';
 import { managerRoutes } from './routes/managerRoutes';
 import { teacherClassRouter } from "./routes/teacherClassRoutes";
+import { teacherSchoolRouter } from "./routes/teacherSchoolRoutes";
+
 import cors from 'cors';
 
 const app = express();
@@ -50,6 +52,7 @@ app.use('/api/students', studentRoutes);
 app.use('/api/coordinators', coordinatorRoutes);
 app.use('/api/managers', managerRoutes);
 app.use("/api/teacher-class", teacherClassRouter);
+app.use("/api/teacherschool", teacherSchoolRouter);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
