@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 export class ClassRepository {
   // Cria uma nova classe
   async create(
-    classData: Omit<ClassModel, 'id' | 'school' | 'teacher' | 'students' | 'numberOfStudents'>
+    classData: Omit<ClassModel, 'id' | 'school' | 'teacher' | 'students' | 'numberOfStudents'|'subjects'>
   ): Promise<ClassModel> {
     const newClass = await prisma.class.create({
       data: {
@@ -29,7 +29,8 @@ export class ClassRepository {
       newClass.school_year,
       newClass.school_id,
       newClass.numberOfStudents,
-      newClass.nivel // Retorna diretamente o valor do enum do Prisma
+      newClass.nivel,
+      [],
     );
   }
 
@@ -52,7 +53,8 @@ export class ClassRepository {
       classData.school_year,
       classData.school_id,
       classData.numberOfStudents,
-      classData.nivel // Retorna diretamente o valor do enum do Prisma
+      classData.nivel,
+      [],
     );
   }
 
@@ -73,7 +75,8 @@ export class ClassRepository {
         classData.school_year,
         classData.school_id,
         classData.numberOfStudents,
-        classData.nivel // Retorna diretamente o valor do enum do Prisma
+        classData.nivel,
+        [],
       );
     });
   }
@@ -104,7 +107,8 @@ export class ClassRepository {
       updatedClass.school_year,
       updatedClass.school_id,
       updatedClass.numberOfStudents,
-      updatedClass.nivel // Retorna diretamente o valor do enum do Prisma
+      updatedClass.nivel,
+      [],
     );
   }
 
@@ -134,15 +138,19 @@ export class ClassRepository {
       where: {
         school_id: schoolId,
       },
+      include: {
+        subjects: true,  // Incluir as disciplinas associadas a cada turma
+      },
     });
-
+  
     return classesFound.map((classData) => new ClassModel(
       classData.id,
       classData.name,
       classData.school_year,
       classData.school_id,
       classData.numberOfStudents,
-      classData.nivel
+      classData.nivel,
+      classData.subjects || [],  // Adicionando as disciplinas associadas
     ));
   }
 

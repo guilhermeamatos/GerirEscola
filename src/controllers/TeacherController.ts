@@ -130,10 +130,7 @@ export class TeacherController {
 
     try {
       const teachers = await this.teacherService.getTeachersBySchoolId(schoolId);
-      return res.status(200).json({
-        message: "Professores encontrados com sucesso.",
-        data: teachers,
-      });
+      return res.status(200).json(teachers);
     } catch (error) {
       return res.status(400).json({
         message: (error instanceof Error) ? error.message : 'Unknown error occurred',
