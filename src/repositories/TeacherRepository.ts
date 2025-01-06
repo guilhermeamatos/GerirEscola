@@ -150,13 +150,20 @@ export class TeacherRepository {
           },
         },
       },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        phone: true,
-        specialization: true,
+      include: {
+        classes: {
+          include: {
+            class: true,
+          },
+        },
+        subjects: true,
       },
+    });
+  }
+
+  async findSchoolById(schoolId: string) {
+    return await prisma.school.findUnique({
+      where: { id: schoolId },
     });
   }
 

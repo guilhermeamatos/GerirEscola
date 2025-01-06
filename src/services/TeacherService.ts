@@ -97,13 +97,23 @@ export class TeacherService {
     const token = sign({ id: teacher.id }, 'your_jwt_secret_key', { expiresIn: '1h' });
     return token;
   }
-  async getTeachersBySchool(schoolId: string) {
+  async getTeachersBySchoolId(schoolId: string) {
     if (!schoolId) {
-      throw new Error('School ID is required');
+      throw new Error("O ID da escola é obrigatório.");
+    }
+
+    // Verificar se a escola existe
+    const school = await this.teacherRepository.findSchoolById(schoolId);
+    if (!school) {
+      throw new Error("Escola não encontrada.");
     }
 
     const teachers = await this.teacherRepository.findTeachersBySchoolId(schoolId);
-    
+
+    if (!teachers.length) {
+      throw new Error("Nenhum professor encontrado para esta escola.");
+    }
+
     return teachers;
   }
 

@@ -173,5 +173,9 @@ teacherRoutes.delete('/:id', (req, res) => teacherController.delete(req, res));
 
 teacherRoutes.post('/login', (req, res) => teacherController.login(req, res));
 
+teacherRoutes.get("/school/:schoolId/teachers", (req, res) =>
+    teacherController.getTeachersBySchoolIdController(req, res)
+  );
+
 teacherRoutes.post('/upload', upload.single('file'), teacherController.processTeacherSpreadsheet);
 export { teacherRoutes };

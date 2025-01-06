@@ -91,6 +91,6 @@ export class SchoolService {
       throw new Error('School ID is required');
     }
 
-    return await this.teacherService.getTeachersBySchool(schoolId);
+    return await this.teacherService.getTeachersBySchoolId(schoolId);
   }
 }
