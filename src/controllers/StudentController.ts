@@ -109,4 +109,26 @@ async delete(req: Request, res: Response): Promise<Response> {
     return res.status(500).json({ error: 'An unexpected error occurred' });
   }
   }
+
+  async linkStudentToClass(req: Request, res: Response) {
+    const { studentId, classId } = req.body;
+
+    try {
+      // Chama o serviço para vincular estudante à classe
+      const updatedStudent = await this.studentService.linkStudentToClass(studentId, classId);
+
+      // Retorna o estudante atualizado
+      res.status(200).json({
+        message: 'Estudante vinculado à classe com sucesso.',
+        student: updatedStudent,
+      });
+    } catch (error) {
+      // Trata erros e retorna uma mensagem adequada
+      if (error instanceof Error) {
+        res.status(400).json({ error: error.message });
+      } else {
+        res.status(400).json({ error: 'Unknown error occurred' });
+      }
+    }
+  }
 }

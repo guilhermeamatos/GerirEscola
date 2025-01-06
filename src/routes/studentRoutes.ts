@@ -173,4 +173,7 @@ studentRoutes.put('/:id', validate(updateStudentValidationSchema), (req, res) =>
  */
 studentRoutes.delete('/:id', (req, res) => studentController.delete(req, res));
 
+
+studentRoutes.post('/link-to-class', (req, res) => studentController.linkStudentToClass(req, res));
+
 export { studentRoutes };

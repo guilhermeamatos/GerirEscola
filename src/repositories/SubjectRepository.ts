@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, Enrollment } from "@prisma/client";
 import Subject from "../models/Subject";
 import { nameSubjects } from '@prisma/client';
 
@@ -31,7 +31,7 @@ export class SubjectRepository {
       }
 
     async createEnrollment(studentId: string, subjectId: string) {
-    return prisma.enrollment.create({
+     return prisma.enrollment.create({
         data: {
         student_id: studentId,
         subject_id: subjectId,
@@ -39,5 +39,24 @@ export class SubjectRepository {
         attendance: null, // Inicialmente a frequência é nula
           },
         });
-      }
+    }
+
+    async getEnrollmentsByStudent(studentId: string): Promise<Enrollment[]> {
+      return await prisma.enrollment.findMany({
+        where: { student_id: studentId },
+        include: {
+          subject: true, 
+        },
+      });
+    }
+
+    async deleteEnrollment(enrollmentId: string): Promise<void> {
+      await prisma.enrollment.delete({
+        where: { id: enrollmentId },
+      });
+    }
+    
+
+  
+
 }

@@ -16,7 +16,7 @@ export class Student {
     schoolId: string;
     school?: School;
   
-    constructor(id: string, name: string, birthdate: Date, cpf: string, address: string, phone: string, email: string,  schoolYear: number, matricula: string, password: string, schoolId: string) {
+    constructor(id: string, name: string, birthdate: Date, cpf: string, address: string, phone: string, email: string,  schoolYear: number, matricula: string, password: string, schoolId: string, classId : string) {
       this.id = id;
       this.name = name;
       this.birthdate = birthdate;
@@ -28,6 +28,7 @@ export class Student {
       this.matricula = matricula;
       this.password = password;
       this.schoolId = schoolId;
+      this.classId = classId;
     }
   }
   

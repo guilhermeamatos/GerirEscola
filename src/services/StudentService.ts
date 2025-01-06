@@ -5,6 +5,7 @@ import { Student } from '../models/Student';
 import { SubjectRepository } from '../repositories/SubjectRepository';
 import { SubjectService } from './SubjectService';
 import { CreateStudentDTO } from '../dto';
+import e from 'express';
 
 export class StudentService {
   private studentRepository: StudentRepository;
@@ -84,8 +85,9 @@ export class StudentService {
         studentData.password = this.generatePassword(studentData);
 
         const createStudent = await this.studentRepository.create(studentData);
-
-        this.enrollStudentInClass(createStudent.id, studentData.classId);
+        if (studentData.classId) {
+          this.enrollStudentInClass(createStudent.id, studentData.classId);
+        }
 
         return createStudent;
     } catch (error) {
@@ -98,6 +100,7 @@ export class StudentService {
 
   async enrollStudentInClass(studentId: string, classId: string) {
     const subjects = await this.subjectRepository.getSubjectsByClass(classId);
+    console.log(subjects.length);
 
     if (subjects.length === 0) {
       throw new Error('Não há disciplinas associadas a essa classe.');
@@ -156,5 +159,45 @@ export class StudentService {
     }
   
     await this.studentRepository.delete(id);
+  }
+
+  async linkStudentToClass(studentId: string, classId: string) {
+    const student = await this.studentRepository.findById(studentId);
+    const studentExists = await this.studentRepository.checkStudentExists(studentId);
+    if (!studentExists) {
+      throw new Error('Estudante não encontrado.'); 
+    }
+
+    const classExists = await this.studentRepository.checkClassExists(classId);
+    if (!classExists) {
+      throw new Error('Classe não encontrada.'); 
+    }
+
+    if (student?.classId) {
+      if (student?.classId === classId) {
+        throw new Error('O estudante já está vinculado a esta turma.');
+      }
+
+      const currentEnrollments = await this.subjectRepository.getEnrollmentsByStudent(studentId);
+      const hasNonTransferableSubjects = currentEnrollments.some((enrollment) => !enrollment.transfer);
+
+      if (hasNonTransferableSubjects) {
+        throw new Error(
+          'O estudante possui disciplinas que não permitem transferência. Realize a transferência administrativa.'
+        );
+      }
+
+      for (const enrollment of currentEnrollments) {
+        await this.subjectRepository.deleteEnrollment(enrollment.id);
+      }
+
+
+    }
+
+    const updatedStudent = await this.studentRepository.updateStudentClass(studentId, classId);
+
+    await this.enrollStudentInClass(studentId, classId);
+
+    return updatedStudent; 
   }
 }

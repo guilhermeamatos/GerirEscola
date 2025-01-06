@@ -47,7 +47,8 @@ export class StudentRepository {
         newStudent.school_year,
         newStudent.matricula ?? "",
         newStudent.password ?? "",
-        newStudent.school.id
+        newStudent.school.id,
+        newStudent.class_id?? ""
       );
     } catch (error) {
       console.error("Error creating student:", error);
@@ -76,7 +77,8 @@ export class StudentRepository {
       student.school_year,
       student.matricula ?? "",
       student.password ?? "",
-      student.school_id
+      student.school_id,
+      student.class_id?? ""
     );
   }
 
@@ -99,7 +101,8 @@ export class StudentRepository {
         student.school_year,
         student.matricula ?? "",
         student.password ?? "",
-        student.school_id
+        student.school_id,
+        student.class_id?? ""
       );
     });
   }
@@ -136,7 +139,8 @@ export class StudentRepository {
       updatedStudent.school_year,
       updatedStudent.matricula ?? "",
       updatedStudent.password ?? "",
-      studentData.schoolId ?? ""
+      updatedStudent.school_id ?? "",
+      updatedStudent.class_id?? ""
     );
   }
 
@@ -175,5 +179,27 @@ export class StudentRepository {
       where: { id: class_id },
     });
     return !!classRecord; // Retorna true se a turma existir
+  }
+
+   // Verifica se o estudante existe
+   async checkStudentExists(studentId: string) {
+    return prisma.student.findUnique({
+      where: { id: studentId },
+    });
+  }
+
+  // Verifica se a classe existe
+  async checkClassExists(classId: string) {
+    return prisma.class.findUnique({
+      where: { id: classId },
+    });
+  }
+
+  // Atualiza o estudante com o ID da classe
+  async updateStudentClass(studentId: string, classId: string) {
+    return prisma.student.update({
+      where: { id: studentId },
+      data: { class_id: classId },
+    });
   }
 }

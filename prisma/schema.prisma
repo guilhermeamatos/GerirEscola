@@ -61,7 +61,8 @@ model Enrollment {
   id           String    @id @default(uuid())
   student_id   String
   subject_id   String
-  grade        Float?    
+  transfer     Boolean @default(true)
+  grade        Float?
   attendance   Float?  
   student      Student  @relation(fields: [student_id], references: [id])
   subject      Subject  @relation(fields: [subject_id], references: [id])
