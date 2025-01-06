@@ -202,4 +202,24 @@ export class StudentRepository {
       data: { class_id: classId },
     });
   }
+
+  async findStudentsBySchoolAndYear(schoolId: string, schoolYear: number) {
+    return prisma.student.findMany({
+      where: {
+        school_id: schoolId,
+        school_year: schoolYear,
+      },
+      include: {
+        class: true, 
+        school: true, 
+      },
+    });
+  }
+
+  async doesSchoolExist(schoolId: string) {
+    const school = await prisma.school.findUnique({
+      where: { id: schoolId },
+    });
+    return !!school; 
+  }
 }

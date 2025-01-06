@@ -176,4 +176,10 @@ studentRoutes.delete('/:id', (req, res) => studentController.delete(req, res));
 
 studentRoutes.post('/link-to-class', (req, res) => studentController.linkStudentToClass(req, res));
 
+studentRoutes.get(
+    "/:schoolId/:schoolYear",
+    studentController.getStudentsBySchoolAndYear.bind(studentController)
+  );
+  
+
 export { studentRoutes };

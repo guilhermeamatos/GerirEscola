@@ -131,4 +131,30 @@ async delete(req: Request, res: Response): Promise<Response> {
       }
     }
   }
+
+  async getStudentsBySchoolAndYear(req: Request, res: Response) {
+    const { schoolId, schoolYear } = req.params;
+
+    try {
+      // Valida os parâmetros
+      if (!schoolId || !schoolYear) {
+        return res
+          .status(400)
+          .json({ error: "schoolId and schoolYear are required" });
+      }
+      const year = parseInt(schoolYear, 10);
+      if (isNaN(year)) {
+        return res.status(400).json({ error: "Invalid year" });
+      }
+      const students = await this.studentService.getStudentsBySchoolAndYear(schoolId, year);
+
+      return res.status(200).json(students);
+    } catch (error) {
+      console.log(error);
+      if (error instanceof Error && error.message === "School not found") {
+        return res.status(404).json({ error: "School not found" });
+      }
+      return res.status(500).json({ error: "Internal server error" });
+    }
+  }
 }

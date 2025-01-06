@@ -200,4 +200,29 @@ export class StudentService {
 
     return updatedStudent; 
   }
+
+  async getStudentsBySchoolAndYear(schoolId: string, schoolYear: number) {
+  
+    try {
+      const schoolExists = await this.studentRepository.doesSchoolExist(schoolId);
+
+      if (!schoolExists) {
+        throw new Error("School not found");
+      }
+  
+      const students = await this.studentRepository.findStudentsBySchoolAndYear(
+        schoolId,
+        schoolYear
+      );
+      
+      return students;
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error("Service Error:", error.message);
+      } else {
+        console.error("Service Error:", error);
+      }
+      throw error; 
+    }
+  }  
 }
