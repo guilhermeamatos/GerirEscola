@@ -103,10 +103,6 @@ export class ClassService {
     // Busca as turmas
     const classes = await this.classRepository.findClassesBySchoolAndYear(schoolId, schoolYear);
 
-    if (!classes || classes.length === 0) {
-      throw new Error('No classes found for the specified school and year');
-    }
-
     return classes;
   }
 }
