@@ -137,4 +137,15 @@ export class TeacherController {
       });
     }
   }
+
+  async getClassesByTeacher(req: Request, res: Response) {
+    const { id: teacherId } = req.params;
+
+    try {
+      const classes = await this.teacherService.getClassesByTeacher(teacherId);
+      return res.status(200).json(classes);
+    } catch (error: any) {
+      return res.status(error.status || 500).json({ message: error.message });
+    }
+  }
 }

@@ -167,4 +167,19 @@ export class TeacherRepository {
     });
   }
 
+  async findClassesByTeacher(teacherId: string) {
+    return await prisma.teacherClass.findMany({
+      where: { teacher_id: teacherId },
+      include: {
+        class: {
+          include: {
+            subjects: {
+              where: { teacher_id: teacherId }, 
+            },
+          },
+        },
+      },
+    });
+  }
+
 }

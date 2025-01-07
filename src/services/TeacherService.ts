@@ -117,4 +117,30 @@ export class TeacherService {
     return teachers;
   }
 
+
+  async getClassesByTeacher(teacherId: string) {
+    // Verifica se o professor existe
+    const teacher = await this.teacherRepository.findById(teacherId);
+    if (!teacher) {
+      throw {
+        status: 404,
+        message: 'Professor não encontrado.',
+      };
+    }
+
+    // Busca as turmas e disciplinas associadas
+    const classes = await this.teacherRepository.findClassesByTeacher(teacherId);
+
+    // Transforma o resultado para um formato mais amigável
+    return classes.map((teacherClass) => ({
+      classId: teacherClass.class.id,
+      className: teacherClass.class.name,
+      nivel: teacherClass.class.nivel,
+      subjects: teacherClass.class.subjects.map((subject) => ({
+        subjectId: subject.id,
+        subjectName: subject.name,
+      })),
+    }));
+  }
+
 }

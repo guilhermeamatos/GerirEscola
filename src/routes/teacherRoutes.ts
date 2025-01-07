@@ -178,4 +178,8 @@ teacherRoutes.get("/school/:schoolId/teachers", (req, res) =>
   );
 
 teacherRoutes.post('/upload', upload.single('file'), teacherController.processTeacherSpreadsheet);
+
+teacherRoutes.get('/:id/classes', (req, res) => teacherController.getClassesByTeacher(req, res));
+
+
 export { teacherRoutes };
