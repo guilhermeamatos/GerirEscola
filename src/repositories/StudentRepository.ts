@@ -222,4 +222,33 @@ export class StudentRepository {
     });
     return !!school; 
   }
+
+  async findSubjectById(subjectId: string) {
+    return prisma.subject.findUnique({
+      where: { id: subjectId },
+    });
+  }
+
+  async findStudentsBySubject(subjectId: string) {
+    return prisma.student.findMany({
+      where: {
+        enrollments: {
+          some: {
+            subject_id: subjectId,
+          },
+        },
+      },
+      select: {
+        id: true,
+        name: true,
+        matricula: true,
+        email: true,
+        class: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
+  }
 }

@@ -225,4 +225,25 @@ export class StudentService {
       throw error; 
     }
   }  
+
+  async getStudentsBySubject(subjectId: string) {
+    if (!subjectId) {
+      throw {
+        status: 400,
+        message: 'O ID da disciplina é obrigatório.',
+      };
+    }
+
+    // Verifica se a disciplina existe
+    const subject = await this.studentRepository.findSubjectById(subjectId);
+    if (!subject) {
+      throw {
+        status: 404,
+        message: 'Disciplina não encontrada.',
+      };
+    }
+
+    // Busca os estudantes associados à disciplina
+    return await this.studentRepository.findStudentsBySubject(subjectId);
+  }
 }
