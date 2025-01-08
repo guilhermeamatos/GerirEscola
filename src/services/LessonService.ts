@@ -57,10 +57,7 @@ export class LessonService {
       });
       attendanceResults.push(attendance);
 
-      // Incrementa as faltas se o aluno estiver ausente
-      if (isAbsent) {
-        await this.enrollmentRepository.incrementFouls(enrollment.id);
-      }
+     
     }
 
     return attendanceResults;
