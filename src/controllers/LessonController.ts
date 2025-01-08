@@ -18,4 +18,15 @@ export class LessonController {
       return res.status(error.status || 500).json({ message: error.message });
     }
   }
+
+  async registerAttendance(req: Request, res: Response) {
+    const { lessonId, absentStudentIds } = req.body;
+
+    try {
+      const attendance = await this.lessonService.registerAttendance(lessonId, absentStudentIds);
+      return res.status(201).json(attendance);
+    } catch (error: any) {
+      return res.status(error.status || 500).json({ message: error.message });
+    }
+  }
 }

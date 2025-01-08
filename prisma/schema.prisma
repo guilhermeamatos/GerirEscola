@@ -81,6 +81,7 @@ model EnrollmentLesson {
   present      Boolean     @default(true)
   enrollment    Enrollment  @relation(fields: [enrollment_id], references: [id])
   lesson        Lesson      @relation(fields: [lesson_id], references: [id])
+  @@unique([enrollment_id, lesson_id])
 }
 
 
@@ -90,7 +91,7 @@ model Lesson {
   dscreption  String?
   subject_id  String
   subject     Subject      @relation(fields: [subject_id], references: [id])
-  enrollments EnrollmentLesson[]
+  presences  EnrollmentLesson[]
 }
 
 model Grades {
