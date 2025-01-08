@@ -35,8 +35,6 @@ export class SubjectRepository {
         data: {
         student_id: studentId,
         subject_id: subjectId,
-        grade: null, // Inicialmente a nota é nula
-        attendance: null, // Inicialmente a frequência é nula
           },
         });
     }

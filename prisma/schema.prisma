@@ -39,6 +39,8 @@ model Class {
   id          String       @id @default(uuid())
   name        String
   nivel       nivelClass
+  active      Boolean     @default(true)
+  year        Int @default(2025)
   numberOfStudents Int
   school_year Int
   school_id   String
@@ -55,6 +57,7 @@ model Subject {
   class       Class?      @relation(fields: [class_id], references: [id])
   name        nameSubjects
   enrollments    Enrollment[]
+  lessons       Lesson[]
 }
 
 model Enrollment {
@@ -62,13 +65,66 @@ model Enrollment {
   student_id   String
   subject_id   String
   transfer     Boolean @default(true)
-  grade        Float?
-  attendance   Float?  
+  gradesid      String? @unique
+  grade        Grades?    @relation(fields: [gradesid], references: [id])
   student      Student  @relation(fields: [student_id], references: [id])
   subject      Subject  @relation(fields: [subject_id], references: [id])
+  lessons      EnrollmentLesson[]
 
   @@unique([student_id, subject_id]) 
 }
+
+model EnrollmentLesson {
+  id            String      @id @default(uuid())
+  enrollment_id String
+  lesson_id     String
+  present      Boolean     @default(true)
+  enrollment    Enrollment  @relation(fields: [enrollment_id], references: [id])
+  lesson        Lesson      @relation(fields: [lesson_id], references: [id])
+}
+
+
+model Lesson {
+  id          String       @id @default(uuid())
+  name        String
+  dscreption  String?
+  subject_id  String
+  subject     Subject      @relation(fields: [subject_id], references: [id])
+  enrollments EnrollmentLesson[]
+}
+
+model Grades {
+  id            String    @id @default(uuid())
+  grade1_1      Float     @default(0)
+  grade1_2      Float     @default(0)
+  grade1_3      Float     @default(0)
+  grade2_1      Float     @default(0)
+  grade2_2      Float     @default(0)
+  grade2_3      Float     @default(0)
+  grade3_1      Float     @default(0)
+  grade3_2      Float     @default(0)
+  grade3_3      Float     @default(0)
+  grade1_1Value Float     @default(0)
+  grade1_2Value Float     @default(0)
+  grade1_3Value Float     @default(0)
+  grade2_1Value Float     @default(0)
+  grade2_2Value Float     @default(0)
+  grade2_3Value Float     @default(0)
+  grade3_1Value Float     @default(0)
+  grade3_2Value Float     @default(0)
+  grade3_3Value Float     @default(0)
+  grade1_rp     Float     @default(0)
+  grade2_rp     Float     @default(0)
+  grade3_rp     Float     @default(0)
+  grade1_media  Float     @default(0)
+  grade2_media  Float     @default(0)
+  grade3_media  Float     @default(0)
+  grade_final  Float     @default(0)
+  id_enrollment String
+  Enrollment    Enrollment?
+}
+
+
 
 
 enum nameSubjects{
