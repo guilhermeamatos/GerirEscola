@@ -40,4 +40,15 @@ export class LessonController {
       return res.status(error.status || 500).json({ message: error.message });
     }
   }
+
+  async getLessonAttendance(req: Request, res: Response) {
+    const { lessonId } = req.params;
+
+    try {
+      const attendance = await this.lessonService.getLessonAttendance(lessonId);
+      return res.status(200).json(attendance);
+    } catch (error: any) {
+      return res.status(error.status || 500).json({ message: error.message });
+    }
+  }
 }

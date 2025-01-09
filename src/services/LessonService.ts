@@ -84,4 +84,26 @@ export class LessonService {
     // Busca as aulas associadas à disciplina
     return await this.lessonRepository.findLessonsBySubject(subjectId);
   }
+
+  async getLessonAttendance(lessonId: string) {
+    if (!lessonId) {
+      throw {
+        status: 400,
+        message: 'O ID da aula é obrigatório.',
+      };
+    }
+
+    // Verifica se a aula existe
+    const lesson = await this.lessonRepository.findLessonById(lessonId);
+    if (!lesson) {
+      throw {
+        status: 404,
+        message: 'Aula não encontrada.',
+      };
+    }
+
+    // Busca a frequência da aula
+    const attendance = await this.lessonRepository.findLessonAttendance(lessonId);
+    return attendance;
+  }
 }

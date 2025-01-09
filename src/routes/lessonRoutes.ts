@@ -10,5 +10,7 @@ lessonRouter.post('/attendance', (req, res) => lessonController.registerAttendan
 
 lessonRouter.get('/subject/:subjectId', (req, res) => lessonController.getLessonsBySubject(req, res));
 
+lessonRouter.get('/attendance/:lessonId', (req, res) => lessonController.getLessonAttendance(req, res));
+
 
 export { lessonRouter };

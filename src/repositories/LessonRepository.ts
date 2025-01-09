@@ -66,4 +66,30 @@ export class LessonRepository {
       },
     });
   }
+  
+  async findLessonAttendance(lessonId: string) {
+    const attendanceRecords = await prisma.enrollmentLesson.findMany({
+      where: { lesson_id: lessonId },
+      select: {
+        enrollment: {
+          select: {
+            student: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+        },
+        present: true,
+      },
+    });
+
+    // Formata a resposta para incluir apenas os dados necessários
+    return attendanceRecords.map(record => ({
+      studentId: record.enrollment.student.id,
+      studentName: record.enrollment.student.name,
+      present: record.present,
+    }));
+  }
 }
