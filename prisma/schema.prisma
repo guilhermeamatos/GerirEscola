@@ -65,7 +65,7 @@ model Enrollment {
   student_id   String
   subject_id   String
   transfer     Boolean @default(true)
-  gradesid      String? @unique
+  gradesid     String?   @unique
   grade        Grades?    @relation(fields: [gradesid], references: [id])
   student      Student  @relation(fields: [student_id], references: [id])
   subject      Subject  @relation(fields: [subject_id], references: [id])
@@ -121,11 +121,10 @@ model Grades {
   grade2_media  Float     @default(0)
   grade3_media  Float     @default(0)
   grade_final  Float     @default(0)
-  id_enrollment String
+  id_enrollment String   @unique
   Enrollment    Enrollment?
+
 }
-
-
 
 
 enum nameSubjects{

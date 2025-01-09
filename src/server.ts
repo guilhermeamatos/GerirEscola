@@ -9,6 +9,7 @@ import { coordinatorRoutes } from './routes/coordinatorRoutes';
 import { managerRoutes } from './routes/managerRoutes';
 import { teacherClassRouter } from "./routes/teacherClassRoutes";
 import { teacherSchoolRouter } from "./routes/teacherSchoolRoutes";
+import { gradeRoutes } from "./routes/gradeRoutes";
 import { lessonRouter } from "./routes/lessonRoutes"; 
 
 import cors from 'cors';
@@ -55,6 +56,7 @@ app.use('/api/managers', managerRoutes);
 app.use("/api/teacher-class", teacherClassRouter);
 app.use("/api/teacherschool", teacherSchoolRouter);
 app.use("/api/lessons", lessonRouter);
+app.use("/api/grades", gradeRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
