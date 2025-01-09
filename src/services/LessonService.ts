@@ -62,4 +62,26 @@ export class LessonService {
 
     return attendanceResults;
   }
+  
+
+  async getLessonsBySubject(subjectId: string) {
+    if (!subjectId) {
+      throw {
+        status: 400,
+        message: 'O ID da disciplina é obrigatório.',
+      };
+    }
+
+    // Verifica se a disciplina existe
+    const subject = await this.lessonRepository.findSubjectById(subjectId);
+    if (!subject) {
+      throw {
+        status: 404,
+        message: 'Disciplina não encontrada.',
+      };
+    }
+
+    // Busca as aulas associadas à disciplina
+    return await this.lessonRepository.findLessonsBySubject(subjectId);
+  }
 }

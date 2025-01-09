@@ -50,4 +50,20 @@ export class LessonRepository {
       },
     });
   }
+
+  async findLessonsBySubject(subjectId: string) {
+    return prisma.lesson.findMany({
+      where: { subject_id: subjectId },
+      select: {
+        id: true,
+        name: true,
+        dscreption: true,
+        subject: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
+  }
 }

@@ -29,4 +29,15 @@ export class LessonController {
       return res.status(error.status || 500).json({ message: error.message });
     }
   }
+
+  async getLessonsBySubject(req: Request, res: Response) {
+    const { subjectId } = req.params;
+
+    try {
+      const lessons = await this.lessonService.getLessonsBySubject(subjectId);
+      return res.status(200).json(lessons);
+    } catch (error: any) {
+      return res.status(error.status || 500).json({ message: error.message });
+    }
+  }
 }
