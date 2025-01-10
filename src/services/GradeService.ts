@@ -1,3 +1,4 @@
+import e from 'express';
 import { GradeRepository } from '../repositories/GradeRepository';
 
 export class GradeService {
@@ -9,8 +10,6 @@ export class GradeService {
 
   // Cadastro de notas e valores de avaliação
   async upsertGradesAndValues(subjectId: string, data: any) {
-    console.log('subjectId', subjectId);
-    console.log('data', data);
     if (!subjectId) {
       throw { status: 400, message: 'O ID da disciplina é obrigatório.' };
     }
@@ -50,12 +49,25 @@ export class GradeService {
         const grade3_2 = sanitizedGrades.grade3_2 ?? 0;
         const grade3_3 = sanitizedGrades.grade3_3 ?? 0;
 
-        const grade1_media = (grade1_1 + grade1_2 + grade1_3) / 3;
-        const grade2_media = (grade2_1 + grade2_2 + grade2_3) / 3;
-        const grade3_media = (grade3_1 + grade3_2 + grade3_3) / 3;
-        const grade_final = (grade1_media + grade2_media + grade3_media) / 3;
+        let grade1_media = (grade1_1 + grade1_2 + grade1_3) ;
+        let grade2_media = (grade2_1 + grade2_2 + grade2_3) ;
+        let grade3_media = (grade3_1 + grade3_2 + grade3_3) ;
 
-  
+        let nota1 = grade1_media;
+        let nota2 = grade2_media;
+        let nota3 = grade3_media;
+
+        if (grade1_media < sanitizedGrades.grade1_rp) {
+            nota1 = sanitizedGrades.grade1_rp;
+        }
+        if (grade2_media < sanitizedGrades.grade2_rp) {
+            nota2 = sanitizedGrades.grade2_rp;
+        }
+        if (grade3_media < sanitizedGrades.grade3_rp) {
+            nota3 = sanitizedGrades.grade3_rp;
+        }
+        let grade_final = (nota1 + nota2 + nota3) / 3;
+
       const updatedGrade = await this.gradeRepository.upsertGrade(subjectId, studentId, {
         ...sanitizedGrades,
         grade1_media,
