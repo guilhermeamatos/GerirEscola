@@ -39,12 +39,13 @@ export class GradeRepository {
         },
       },
     });
-
+  
     if (!enrollment) {
       throw { status: 404, message: 'Matrícula não encontrada para o aluno e a disciplina.' };
     }
-
-    return prisma.grades.upsert({
+  
+    // Cria ou atualiza as notas
+    const gradeRecord = await prisma.grades.upsert({
       where: { id_enrollment: enrollment.id },
       update: { ...grades },
       create: {
@@ -52,7 +53,18 @@ export class GradeRepository {
         ...grades,
       },
     });
+  
+    // Atualiza o campo `gradesid` na matrícula
+    await prisma.enrollment.update({
+      where: { id: enrollment.id },
+      data: {
+        gradesid: gradeRecord.id, // Associa o ID das notas ao campo `gradesid`
+      },
+    });
+  
+    return gradeRecord;
   }
+  
 
   // Busca notas e valores de avaliação de uma disciplina
   async findGradesBySubject(subjectId: string) {
