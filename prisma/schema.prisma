@@ -58,6 +58,7 @@ model Subject {
   name        nameSubjects
   enrollments    Enrollment[]
   lessons       Lesson[]
+  assessments   AssessmentValue?
 }
 
 model Enrollment {
@@ -105,15 +106,6 @@ model Grades {
   grade3_1      Float     @default(0)
   grade3_2      Float     @default(0)
   grade3_3      Float     @default(0)
-  grade1_1Value Float     @default(0)
-  grade1_2Value Float     @default(0)
-  grade1_3Value Float     @default(0)
-  grade2_1Value Float     @default(0)
-  grade2_2Value Float     @default(0)
-  grade2_3Value Float     @default(0)
-  grade3_1Value Float     @default(0)
-  grade3_2Value Float     @default(0)
-  grade3_3Value Float     @default(0)
   grade1_rp     Float     @default(0)
   grade2_rp     Float     @default(0)
   grade3_rp     Float     @default(0)
@@ -125,9 +117,23 @@ model Grades {
   Enrollment    Enrollment?
 
 }
+model AssessmentValue {
+  id            String    @id @default(uuid())
+  subject_id    String   @unique 
+  subject       Subject   @relation(fields: [subject_id], references: [id])
+  grade1_1      Float     @default(0)
+  grade1_2      Float     @default(0)
+  grade1_3      Float     @default(0)
+  grade2_1      Float     @default(0)
+  grade2_2      Float     @default(0)
+  grade2_3      Float     @default(0)
+  grade3_1      Float     @default(0)
+  grade3_2      Float     @default(0)
+  grade3_3      Float     @default(0)
+}
 
 
-enum nameSubjects{
+enum nameSubjects {
   LINGUA_PORTUGUESA
   MATEMATICA
   CIENCIAS
@@ -138,6 +144,7 @@ enum nameSubjects{
   ENSINO_RELIGIOSO
   INGLES
 }
+
 
 enum nivelClass {
   INFANTIL
