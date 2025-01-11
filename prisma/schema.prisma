@@ -71,8 +71,18 @@ model Enrollment {
   student      Student  @relation(fields: [student_id], references: [id])
   subject      Subject  @relation(fields: [subject_id], references: [id])
   lessons      EnrollmentLesson[]
+  registrosDedesempenho    RegistroDeDesempenho?
 
   @@unique([student_id, subject_id]) 
+}
+
+model RegistroDeDesempenho {
+  id            String    @id @default(uuid())
+  enrollment_id String     @unique
+  enrollment    Enrollment  @relation(fields: [enrollment_id], references: [id])
+  parecere1Trimestre String
+  parecere2Trimestre String
+  parecere3Trimestre String
 }
 
 model EnrollmentLesson {

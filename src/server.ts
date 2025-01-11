@@ -11,6 +11,7 @@ import { teacherClassRouter } from "./routes/teacherClassRoutes";
 import { teacherSchoolRouter } from "./routes/teacherSchoolRoutes";
 import { gradeRoutes } from "./routes/gradeRoutes";
 import { lessonRouter } from "./routes/lessonRoutes"; 
+import { performanceRoutes } from './routes/performanceRoutes'; 
 
 import cors from 'cors';
 
@@ -57,6 +58,7 @@ app.use("/api/teacher-class", teacherClassRouter);
 app.use("/api/teacherschool", teacherSchoolRouter);
 app.use("/api/lessons", lessonRouter);
 app.use("/api/grades", gradeRoutes);
+app.use('/api/performances', performanceRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
