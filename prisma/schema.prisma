@@ -48,6 +48,7 @@ model Class {
   school      School      @relation(fields: [school_id], references: [id])
   students    Student[]
   subjects    Subject[]
+  lessons     Lesson[]
 }
 model Subject {
   id          String       @id @default(uuid())
@@ -100,9 +101,23 @@ model Lesson {
   id          String       @id @default(uuid())
   name        String
   dscreption  String?
-  subject_id  String
-  subject     Subject      @relation(fields: [subject_id], references: [id])
+  subject_id  String?
+  class_id    String?
+  date        DateTime   
+  class       Class?       @relation(fields: [class_id], references: [id])
+  subject     Subject?     @relation(fields: [subject_id], references: [id])
   presences  EnrollmentLesson[]
+  students   StudentLensons[]
+}
+
+model StudentLensons {
+  id            String    @id @default(uuid())
+  student_id    String
+  lesson_id     String
+  present      Boolean     @default(true)
+  student       Student    @relation(fields: [student_id], references: [id])
+  lesson        Lesson     @relation(fields: [lesson_id], references: [id])
+  @@unique([student_id, lesson_id])
 }
 
 model Grades {
@@ -203,6 +218,7 @@ model Student {
   school_id      String
   school         School       @relation(fields: [school_id], references: [id])
   enrollments    Enrollment[]
+  studentLessons StudentLensons[]
 }
 
 model Coordinator {

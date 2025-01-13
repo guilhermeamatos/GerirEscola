@@ -12,58 +12,62 @@ export class LessonService {
     this.enrollmentRepository = new EnrollmentRepository
   }
 
-  async registerLesson(data: { name: string; description?: string; subjectId: string }) {
+  async registerLesson(data: { name: string; description?: string; subjectId: string; date: Date | string }) {
     // Verifica se a disciplina existe
-    if (!data.subjectId) {
-      throw {
-        status: 400,
-        message: 'O campo subjectId é obrigatório.',
-      };
-    }
     const subject = await this.lessonRepository.findSubjectById(data.subjectId);
     if (!subject) {
-      throw {
-        status: 404,
-        message: 'Disciplina não encontrada.',
-      };
+      throw { status: 404, message: 'Disciplina não encontrada.' };
     }
 
-    // Cria a aula associada à disciplina
+    if (!data.date || isNaN(Date.parse(data.date.toString()))) {
+      throw {
+        status: 400,
+        message: 'A data fornecida é inválida.',
+      };
+    }
+  
+    // Cria a aula com o campo `date`
     return await this.lessonRepository.createLesson(data);
   }
+  
+  
 
   async registerAttendance(lessonId: string, absentStudentIds: string[]) {
-    // Verifica se a aula existe e obtém os alunos inscritos
     const lesson = await this.lessonRepository.findLessonById(lessonId);
+  
     if (!lesson) {
       throw {
         status: 404,
         message: 'Aula não encontrada.',
       };
     }
-
-    const { enrollments } = lesson.subject;
+  
+    const subject = lesson.subject;
+  
+    if (!subject || !subject.enrollments) {
+      throw {
+        status: 404,
+        message: 'Disciplina ou inscrições não encontradas.',
+      };
+    }
+  
+    const { enrollments } = subject;
     const attendanceResults = [];
-
-    // Registra a frequência para cada aluno
+  
     for (const enrollment of enrollments) {
       const isAbsent = absentStudentIds.includes(enrollment.student_id);
-
-      // Cria uma instância de EnrollmentLesson
+  
       const attendance = await this.lessonRepository.createEnrollmentLesson({
         enrollmentId: enrollment.id,
         lessonId,
         present: !isAbsent,
       });
       attendanceResults.push(attendance);
-
-     
     }
-
+  
     return attendanceResults;
   }
   
-
   async getLessonsBySubject(subjectId: string) {
     if (!subjectId) {
       throw {

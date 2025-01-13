@@ -1,26 +1,27 @@
 import { Request, Response } from 'express';
-import { LessonService } from '../services/LessonService';
+import { LessonFundamental1Service } from '../services/LessonFundamental1Service';
 
-export class LessonController {
-  private lessonService: LessonService;
+export class LessonFundamental1Controller {
+  private lessonService: LessonFundamental1Service;
 
   constructor() {
-    this.lessonService = new LessonService();
+    this.lessonService = new LessonFundamental1Service();
   }
 
   async registerLesson(req: Request, res: Response) {
-    const { name, description, subjectId, date } = req.body;
+    const { name, description, classId, date } = req.body;
 
     try {
       // Valida se a data está presente, senão atribui a data atual
       const lessonDate = date || new Date().toISOString();
 
-      const lesson = await this.lessonService.registerLesson({ 
+      const lesson = await this.lessonService.registerLessonForClass({ 
         name, 
         description, 
-        subjectId, 
+        classId, 
         date: lessonDate 
       });
+
       return res.status(201).json(lesson);
     } catch (error: any) {
       return res.status(error.status || 500).json({ message: error.message });
@@ -39,11 +40,11 @@ export class LessonController {
     }
   }
 
-  async getLessonsBySubject(req: Request, res: Response) {
-    const { subjectId } = req.params;
+  async getLessonsByClass(req: Request, res: Response) {
+    const { classId } = req.params;
 
     try {
-      const lessons = await this.lessonService.getLessonsBySubject(subjectId);
+      const lessons = await this.lessonService.getLessonsByClass(classId);
       return res.status(200).json(lessons);
     } catch (error: any) {
       return res.status(error.status || 500).json({ message: error.message });

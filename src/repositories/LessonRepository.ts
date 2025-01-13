@@ -3,12 +3,13 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 export class LessonRepository {
-  async createLesson(data: { name: string; description?: string; subjectId: string }) {
+  async createLesson(data: { name: string; description?: string; subjectId: string; date: Date | string }) {
     return await prisma.lesson.create({
       data: {
         name: data.name,
         dscreption: data.description,
         subject_id: data.subjectId,
+        date: new Date(data.date).toISOString(),
       },
     });
   }
@@ -58,6 +59,7 @@ export class LessonRepository {
         id: true,
         name: true,
         dscreption: true,
+        date: true, // Inclua 'date' na busca
         subject: {
           select: {
             name: true,
@@ -66,7 +68,7 @@ export class LessonRepository {
       },
     });
   }
-  
+
   async findLessonAttendance(lessonId: string) {
     const attendanceRecords = await prisma.enrollmentLesson.findMany({
       where: { lesson_id: lessonId },
@@ -85,7 +87,6 @@ export class LessonRepository {
       },
     });
 
-    // Formata a resposta para incluir apenas os dados necessários
     return attendanceRecords.map(record => ({
       studentId: record.enrollment.student.id,
       studentName: record.enrollment.student.name,
