@@ -13,6 +13,7 @@ import { gradeRoutes } from "./routes/gradeRoutes";
 import { lessonRouter } from "./routes/lessonRoutes"; 
 import { lessonFundamental1Router } from './routes/lessonFundamental1Routes';
 import { performanceRoutes } from './routes/performanceRoutes'; 
+import { reportRouter } from './routes/reportRoutes';
 
 import cors from 'cors';
 
@@ -61,6 +62,8 @@ app.use("/api/lessons", lessonRouter);
 app.use("/api/grades", gradeRoutes);
 app.use('/api/performances', performanceRoutes);
 app.use('/api/lessons-fundamental1', lessonFundamental1Router);
+app.use('/api/report', reportRouter);
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

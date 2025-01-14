@@ -12,8 +12,9 @@ export class LessonFundamental1Service {
     if (!classExists) {
       throw { status: 404, message: 'Turma não encontrada.' };
     }
-
-    if (!data.date || isNaN(Date.parse(data.date.toString()))) {
+    console.log(data.date);
+     if (!data.date || isNaN(Date.parse(data.date.toString()))) {
+      console.log("Entrou no if");
       throw {
         status: 400,
         message: 'A data fornecida é inválida.',
