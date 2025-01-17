@@ -1,116 +1,88 @@
-import { PrismaClient } from '@prisma/client';
-import { Teacher as TeacherModel } from '../models/Teacher'; 
+import { PrismaClient } from "@prisma/client";
+import { CreateTeacherDTO, TeacherResponseDTO, TeacherLoginDTO } from "../dto";
+
 const prisma = new PrismaClient();
 
 export class TeacherRepository {
-  
-  async create(teacherData: Omit<TeacherModel, 'id' | 'classes'>): Promise<TeacherModel> {
-    const newTeacher = await prisma.teacher.create({
+  async create(data: CreateTeacherDTO): Promise<void> {
+    await prisma.teacher.create({
       data: {
-        name: teacherData.name,
-        cpf: teacherData.cpf,
-        address: teacherData.address,
-        phone: teacherData.phone,
-        email: teacherData.email,
-        password: teacherData.password,
-        specialization: teacherData.specialization,
-        matricula: teacherData.matricula,
-        concursado: teacherData.concursado,
-      },
-      include: {
-        classes: true, 
+        name: data.name,
+        cpf: data.cpf,
+        address: data.address,
+        phone: data.phone,
+        email: data.email,
+        password: data.password,
+        specialization: data.specialization,
+        matricula: data.matricula,
+        concursado: data.concursado,
       },
     });
-
-    return new TeacherModel(
-      newTeacher.id,
-      newTeacher.name,
-      newTeacher.cpf,
-      newTeacher.address,
-      newTeacher.phone,
-      newTeacher.email,
-      "",
-      newTeacher.specialization ?? "",
-      newTeacher.matricula ?? "",
-      newTeacher.concursado ?? false // Use um valor padrão para booleano, se necessário
-    );
   }
 
-  async findById(id: string): Promise<TeacherModel | null> {
+  async findById(id: string): Promise<TeacherResponseDTO | null> {
     const teacher = await prisma.teacher.findUnique({
       where: { id },
       include: {
-        classes: true, 
+        classes: true,
+        schools: true, // Inclui as escolas associadas
       },
     });
 
     if (!teacher) return null;
 
-    return new TeacherModel(
-      teacher.id,
-      teacher.name,
-      teacher.cpf,
-      teacher.address,
-      teacher.phone,
-      teacher.email,
-      "",
-      teacher.specialization ?? "",
-      teacher.matricula ?? "",
-      teacher.concursado ?? false
-    );
+    return {
+      id: teacher.id,
+      name: teacher.name,
+      matricula: teacher.matricula ?? "",
+      concursado: teacher.concursado,
+      cpf: teacher.cpf,
+      address: teacher.address,
+      phone: teacher.phone,
+      email: teacher.email,
+      specialization: teacher.specialization ?? "",
+      classes: teacher.classes,
+      schools: teacher.schools.map((school) => school.name),
+    };
   }
 
-  async findAll(): Promise<TeacherModel[]> {
+  async findAll(): Promise<TeacherResponseDTO[]> {
     const teachers = await prisma.teacher.findMany({
       include: {
-        classes: true, 
+        classes: true,
+        schools: true, // Inclui as escolas associadas
       },
     });
 
-    return teachers.map((teacher) => {
-      return new TeacherModel(
-        teacher.id,
-        teacher.name,
-        teacher.cpf,
-        teacher.address,
-        teacher.phone,
-        teacher.email,
-        "",
-        teacher.specialization ?? "",
-        teacher.matricula ?? "",
-        teacher.concursado ?? false
-      );
-    });
+    return teachers.map((teacher) => ({
+      id: teacher.id,
+      name: teacher.name,
+      matricula: teacher.matricula ?? "",
+      concursado: teacher.concursado,
+      cpf: teacher.cpf,
+      address: teacher.address,
+      phone: teacher.phone,
+      email: teacher.email,
+      specialization: teacher.specialization ?? "",
+      classes: teacher.classes,
+      schools: teacher.schools.map((school) => school.name),
+    }));
   }
 
-  async update(id: string, teacherData: Partial<Omit<TeacherModel, 'id' | 'classes'>>): Promise<TeacherModel> {
-    const updatedTeacher = await prisma.teacher.update({
+  async update(id: string, data: Partial<CreateTeacherDTO>): Promise<void> {
+    await prisma.teacher.update({
       where: { id },
       data: {
-        name: teacherData.name,
-        cpf: teacherData.cpf,
-        address: teacherData.address,
-        phone: teacherData.phone,
-        email: teacherData.email,
-        specialization: teacherData.specialization,
-      },
-      include: {
-        classes: true, 
+        name: data.name,
+        cpf: data.cpf,
+        address: data.address,
+        phone: data.phone,
+        email: data.email,
+        specialization: data.specialization,
+        matricula: data.matricula,
+        concursado: data.concursado,
       },
     });
-
-    return new TeacherModel(
-      updatedTeacher.id,
-      updatedTeacher.name,
-      updatedTeacher.cpf,
-      updatedTeacher.address,
-      updatedTeacher.phone,
-      updatedTeacher.email,
-      "",
-      updatedTeacher.specialization ?? "",
-      updatedTeacher.matricula ?? "",
-      updatedTeacher.concursado ?? false
-    );
   }
 
   async delete(id: string): Promise<void> {
@@ -119,30 +91,104 @@ export class TeacherRepository {
     });
   }
 
-  async findByEmail(email: string) {
-    return prisma.teacher.findUnique({
+  async findByEmailForLogin(email: string): Promise<TeacherLoginDTO | null> {
+    const teacher = await prisma.teacher.findUnique({
       where: { email },
+      select: {
+        id: true,
+        password: true, // Retorna apenas o necessário para login
+      },
     });
+  
+    if (!teacher) return null;
+  
+    return {
+      id: teacher.id,
+      password: teacher.password ?? "",
+    };
   }
-  async getTeacherByCPF(cpf: string) {
-    return prisma.teacher.findUnique({
+
+  async getTeacherByCPF(cpf: string): Promise<TeacherResponseDTO | null> {
+    const teacher = await prisma.teacher.findUnique({
       where: { cpf },
+      include: {
+        schools: true,
+        classes: true,
+      },
     });
+
+    if (!teacher) return null;
+
+    return {
+      id: teacher.id,
+      name: teacher.name,
+      matricula: teacher.matricula ?? "",
+      concursado: teacher.concursado,
+      cpf: teacher.cpf,
+      address: teacher.address,
+      phone: teacher.phone,
+      email: teacher.email,
+      specialization: teacher.specialization ?? "",
+      classes: teacher.classes,
+      schools: teacher.schools.map((school) => school.name),
+    };
   }
 
-  async getTeacherByEmail(email: string) {
-    return prisma.teacher.findUnique({
+  async getTeacherByEmail(email: string): Promise<TeacherResponseDTO | null> {
+    const teacher = await prisma.teacher.findUnique({
       where: { email },
+      include: {
+        schools: true, // Inclui as escolas associadas
+        classes: true, // Inclui as turmas associadas
+      },
     });
+  
+    if (!teacher) return null;
+  
+    return {
+      id: teacher.id,
+      name: teacher.name,
+      matricula: teacher.matricula ?? "",
+      concursado: teacher.concursado,
+      cpf: teacher.cpf,
+      address: teacher.address,
+      phone: teacher.phone,
+      email: teacher.email,
+      specialization: teacher.specialization ?? "",
+      classes: teacher.classes, 
+      schools: teacher.schools.map((school) => school.name), 
+    };
+  }
+  
+
+  async getTeacherByMatricula(matricula: string): Promise<TeacherResponseDTO | null> {
+    const teacher = await prisma.teacher.findUnique({
+      where: { matricula },
+      include: {
+        schools: true,
+        classes: true,
+      },
+    });
+
+    if (!teacher) return null;
+
+    return {
+      id: teacher.id,
+      name: teacher.name,
+      matricula: teacher.matricula ?? "",
+      concursado: teacher.concursado,
+      cpf: teacher.cpf,
+      address: teacher.address,
+      phone: teacher.phone,
+      email: teacher.email,
+      specialization: teacher.specialization ?? "",
+      classes: teacher.classes,
+      schools: teacher.schools.map((school) => school.name),
+    };
   }
 
-  async getTeacherByMatricula(matricula: string) {
-    return prisma.teacher.findUnique({
-      where: { matricula },
-    });
-  }
-  async findTeachersBySchoolId(schoolId: string) {
-    return await prisma.teacher.findMany({
+  async findTeachersBySchoolId(schoolId: string): Promise<TeacherResponseDTO[]> {
+    const teachers = await prisma.teacher.findMany({
       where: {
         schools: {
           some: {
@@ -151,35 +197,42 @@ export class TeacherRepository {
         },
       },
       include: {
-        classes: {
-          include: {
-            class: true,
-          },
-        },
-        subjects: true,
+        classes: true,
+        schools: true,
       },
     });
+
+    return teachers.map((teacher) => ({
+      id: teacher.id,
+      name: teacher.name,
+      matricula: teacher.matricula ?? "",
+      concursado: teacher.concursado,
+      cpf: teacher.cpf,
+      address: teacher.address,
+      phone: teacher.phone,
+      email: teacher.email,
+      specialization: teacher.specialization ?? "",
+      classes: teacher.classes,
+      schools: teacher.schools.map((school) => school.name),
+    }));
   }
 
-  async findSchoolById(schoolId: string) {
-    return await prisma.school.findUnique({
+  async findSchoolById(schoolId: string): Promise<string | null> {
+    const school = await prisma.school.findUnique({
       where: { id: schoolId },
     });
+
+    return school?.name || null;
   }
 
-  async findClassesByTeacher(teacherId: string) {
-    return await prisma.teacherClass.findMany({
+  async findClassesByTeacher(teacherId: string): Promise<any[]> {
+    const classes = await prisma.teacherClass.findMany({
       where: { teacher_id: teacherId },
       include: {
-        class: {
-          include: {
-            subjects: {
-              where: { teacher_id: teacherId }, 
-            },
-          },
-        },
+        class: true,
       },
     });
-  }
 
+    return classes;
+  }
 }

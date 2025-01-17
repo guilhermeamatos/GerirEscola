@@ -32,6 +32,25 @@ export interface CreateClassDTO {
     password: string;
     specialization: string;
   }
+
+  export interface TeacherResponseDTO {
+    id: string;
+    name: string;
+    matricula: string;
+    concursado: boolean;
+    cpf: string;
+    address: string;
+    phone: string;
+    email: string;
+    specialization: string;
+    classes: any[]; // Ajuste conforme necessário
+    schools: string[]; // Lista dos nomes das escolas associadas
+  }
+  
+  export interface TeacherLoginDTO {
+    id: string;
+    password: string;
+  }
   
   export interface CreateCoordinatorDTO {
     name: string;

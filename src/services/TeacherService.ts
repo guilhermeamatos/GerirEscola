@@ -1,8 +1,6 @@
-// src/services/TeacherService.ts
-
 import { TeacherRepository } from '../repositories/TeacherRepository';
 import { Teacher as TeacherModel } from '../models/Teacher';
-import { CreateTeacherDTO } from '../dto';
+import { CreateTeacherDTO, TeacherResponseDTO } from '../dto';
 import { sign } from 'jsonwebtoken';
 
 export class TeacherService {
@@ -11,6 +9,7 @@ export class TeacherService {
   constructor(teacherRepository: TeacherRepository) {
     this.teacherRepository = teacherRepository;
   }
+
   async dataValidation(teacherData: CreateTeacherDTO) {
     const { cpf, email, matricula } = teacherData;
 
@@ -36,16 +35,23 @@ export class TeacherService {
 
     return "Validação concluída com sucesso.";
   }
-  generatePassword(teacherData: CreateTeacherDTO){
+
+  generatePassword(teacherData: CreateTeacherDTO) {
     const password = teacherData.cpf.slice(0, 3) + teacherData.name.split(' ')[0];
     return password;
   }
 
-  async createTeacher(teacherData: CreateTeacherDTO): Promise<TeacherModel> {
+  async createTeacher(teacherData: CreateTeacherDTO): Promise<TeacherResponseDTO> {
     await this.dataValidation(teacherData);
-    teacherData.password = this.generatePassword(teacherData)
-    return this.teacherRepository.create(teacherData);
+    teacherData.password = this.generatePassword(teacherData);
+
+    // Não retorna diretamente um `TeacherModel`, mas sim um `TeacherResponseDTO`.
+    await this.teacherRepository.create(teacherData);
+
+    // Recupera o professor criado (se necessário)
+    return this.teacherRepository.getTeacherByEmail(teacherData.email) as Promise<TeacherResponseDTO>;
   }
+
   async processSpreadsheet(data: any[]) {
     for (const row of data) {
       const teacherData: CreateTeacherDTO = {
@@ -62,41 +68,50 @@ export class TeacherService {
 
       await this.createTeacher(teacherData);
     }
-  };
+  }
 
-  async getTeacherById(id: string): Promise<TeacherModel | null> {
+  async getTeacherById(id: string): Promise<TeacherResponseDTO | null> {
     return this.teacherRepository.findById(id);
   }
 
-  async getAllTeachers(): Promise<TeacherModel[]> {
+  async getAllTeachers(): Promise<TeacherResponseDTO[]> {
     return this.teacherRepository.findAll();
   }
-  async updateTeacher(id: string, teacherData: Partial<CreateTeacherDTO>): Promise<TeacherModel> {
+
+  async updateTeacher(id: string, teacherData: Partial<CreateTeacherDTO>): Promise<TeacherResponseDTO> {
     const teacher = await this.teacherRepository.findById(id);
     if (!teacher) {
       throw new Error('Teacher not found');
     }
-  
-    return this.teacherRepository.update(id, teacherData);
+
+    // Atualiza os dados no repositório
+    await this.teacherRepository.update(id, teacherData);
+
+    // Recupera os dados atualizados
+    return this.teacherRepository.findById(id) as Promise<TeacherResponseDTO>;
   }
-  
+
   async deleteTeacher(id: string): Promise<void> {
     const teacher = await this.teacherRepository.findById(id);
     if (!teacher) {
       throw new Error('Teacher not found');
     }
-  
+
     await this.teacherRepository.delete(id);
-  } 
-  
+  }
+
   async login(email: string, password: string): Promise<string> {
-    const teacher = await this.teacherRepository.findByEmail(email);
+    const teacher = await this.teacherRepository.findByEmailForLogin(email);
     if (!teacher || teacher.password !== password) {
       throw new Error('Invalid credentials');
     }
+  
+    // Gera um token JWT
     const token = sign({ id: teacher.id }, 'your_jwt_secret_key', { expiresIn: '1h' });
     return token;
   }
+  
+
   async getTeachersBySchoolId(schoolId: string) {
     if (!schoolId) {
       throw new Error("O ID da escola é obrigatório.");
@@ -117,7 +132,6 @@ export class TeacherService {
     return teachers;
   }
 
-
   async getClassesByTeacher(teacherId: string) {
     // Verifica se o professor existe
     const teacher = await this.teacherRepository.findById(teacherId);
@@ -136,11 +150,10 @@ export class TeacherService {
       classId: teacherClass.class.id,
       className: teacherClass.class.name,
       nivel: teacherClass.class.nivel,
-      subjects: teacherClass.class.subjects.map((subject) => ({
+      subjects: teacherClass.class.subjects.map((subject: any) => ({
         subjectId: subject.id,
         subjectName: subject.name,
       })),
     }));
   }
-
 }
