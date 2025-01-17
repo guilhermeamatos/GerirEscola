@@ -145,8 +145,10 @@ export class TeacherService {
     // Busca as turmas e disciplinas associadas
     const classes = await this.teacherRepository.findClassesByTeacher(teacherId);
 
+    console.log(classes);
+
     // Transforma o resultado para um formato mais amigável
-    return classes.map((teacherClass) => ({
+    const formattedClasses = classes.map((teacherClass) => ({
       classId: teacherClass.class.id,
       className: teacherClass.class.name,
       nivel: teacherClass.class.nivel,
@@ -155,5 +157,6 @@ export class TeacherService {
         subjectName: subject.name,
       })),
     }));
+    return formattedClasses;
   }
 }

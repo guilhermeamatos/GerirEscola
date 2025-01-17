@@ -145,6 +145,7 @@ export class TeacherController {
       const classes = await this.teacherService.getClassesByTeacher(teacherId);
       return res.status(200).json(classes);
     } catch (error: any) {
+      console.error(error);
       return res.status(error.status || 500).json({ message: error.message });
     }
   }

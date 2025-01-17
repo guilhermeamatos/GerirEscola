@@ -229,7 +229,11 @@ export class TeacherRepository {
     const classes = await prisma.teacherClass.findMany({
       where: { teacher_id: teacherId },
       include: {
-        class: true,
+        class: {
+          include: {
+            subjects: true,
+          },
+        }
       },
     });
 

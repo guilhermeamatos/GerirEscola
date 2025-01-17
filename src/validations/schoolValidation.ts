@@ -29,5 +29,8 @@ export const updateSchoolSchema = Joi.object({
   address: Joi.string().optional(),
   phone: Joi.string().optional(),
   email: Joi.string().email().optional(),
-  foundedAt: Joi.date().optional(),
+  nivel: Joi.string()
+  .valid('INFANTIL', 'FUNDAMENTAL_1', 'FUNDAMENTAL_2', 'FUNDAMENTAL_1_2', 'INFANTIL_FUNDAMENTAL_1', 'INFANTIL_FUNDAMENTAL_1_2')
+  .optional()
+
 });
